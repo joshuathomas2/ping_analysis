@@ -1,4 +1,5 @@
 import re
+import sys
 
 def main():
     analyze_file(get_path())
@@ -12,13 +13,16 @@ def main():
         return 1
 
 def get_path():
-    print("Enter the full path to the desired text file:")
+    print("Enter the full path to the desired text file (press enter with no input to end program):")
     file_path = input()
-    print("Analyzing " + file_path)
-    return file_path
+
+    if (file_path == ""):
+        sys.exit()
+    else:
+        print("Attempting to analyze... " + file_path)
+        return file_path
 
 def analyze_file(file_path):
-    text_file = open(file_path, "r")
     ping_list = []
     ping_count = 0
     average_ping = 0
@@ -29,6 +33,12 @@ def analyze_file(file_path):
     large_ping_count = 0
     extreme_ping_count = 0
 
+    try:
+        text_file = open(file_path, "r")
+    except FileNotFoundError:
+        print("Incorrect directory or the file does not exist / is not a text file.")
+        main()
+        
     for line in text_file:
         if (line[0:5] == "Reply"):
             ping_count += 1
