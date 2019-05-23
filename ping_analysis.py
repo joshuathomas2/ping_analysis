@@ -1,6 +1,5 @@
 import re
 
-#C:/Users/shady/Desktop/PING/libertyIP.txt
 def main():
     analyze_file(get_path())
 
