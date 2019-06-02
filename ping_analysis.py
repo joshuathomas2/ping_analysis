@@ -26,7 +26,6 @@ def analyze_file(file_path):
     ping_list = []
     ping_count = 0
     average_ping = 0
-    above_average_ping_count = 0
     tiny_ping_count = 0
     small_ping_count = 0
     medium_ping_count = 0
@@ -36,7 +35,10 @@ def analyze_file(file_path):
     try:
         text_file = open(file_path, "r")
     except FileNotFoundError:
-        print("Incorrect directory or the file does not exist / is not a text file.")
+        print("Incorrect directory or not a text file")
+        main()
+    except PermissionError:
+        print("Directory did not point to a specific file or permission was denied")
         main()
         
     for line in text_file:
@@ -44,7 +46,11 @@ def analyze_file(file_path):
             ping_count += 1
             ping_list.append(int(re.split("[ ]", line)[4][5:][:-2]))
 
-    average_ping = int((sum(ping_list)/len(ping_list)))
+    if (len(ping_list) == 0):
+        print("Error with text file: found no ping data")
+        main()
+    else:
+        average_ping = int((sum(ping_list)/len(ping_list)))
     
     for ping in ping_list:
         if (ping > 200):
@@ -58,10 +64,8 @@ def analyze_file(file_path):
         elif (ping > 1):
             tiny_ping_count += 1
 
-    for ping in ping_list:
-        if (ping > average_ping):
-            above_average_ping_count += 1
-
+    print("====================================================")
+    print("Total ping count: ", ping_count)
     print("====================================================")
     print("Tiny ping count:", tiny_ping_count, "(>1ms)")
     print("Small ping count:", small_ping_count, "(>25ms)")
@@ -71,7 +75,6 @@ def analyze_file(file_path):
     print("MAXIMUM ping:", max(ping_list))
     print("MINIMUM ping:", min(ping_list))
     print("AVERAGE ping:", average_ping)
-    print("Pings above the average occured", above_average_ping_count, "out of", ping_count, "times")
     print("====================================================")
 
     return 1
