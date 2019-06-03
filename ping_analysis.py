@@ -53,18 +53,7 @@ def analyze_file(file_name):
     print("Attempting to analyze... " + file_name)
     print_space(1)
 
-    try:
-        text_file = open("data/" + file_name, "r")
-    except FileNotFoundError:
-        print_space(1)
-        print("Incorrect directory or not a text file")
-        print_space(1)
-        main()
-    except PermissionError:
-        print_space(1)
-        print("Directory did not point to a specific file or permission was denied")
-        print_space(1)
-        main()
+    text_file = open("data/" + file_name, "r")
         
     for line in text_file:
         if (line[0:5] == "Reply"):
@@ -92,7 +81,7 @@ def analyze_file(file_name):
             tiny_ping_count += 1
 
     print("====================================================")
-    print("Total ping count: ", ping_count)
+    print("[", file_name, "]", "Total ping count: ", ping_count)
     print("====================================================")
     print("Tiny ping count:", tiny_ping_count, "(>1ms)")
     print("Small ping count:", small_ping_count, "(>25ms)")
