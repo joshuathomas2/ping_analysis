@@ -24,11 +24,15 @@ def choose_file():
     try:
         choice = int(choice)
     except ValueError:
+        print_space(1)
         print("Invalid number")
+        print_space(1)
         main()
 
     if ((choice > len(user_choices) - 1) or (choice < 0)):
+        print_space(1)
         print("Invalid number")
+        print_space(1)
         main()
     else:
         choice = user_choices[choice][1]
@@ -52,10 +56,14 @@ def analyze_file(file_name):
     try:
         text_file = open("data/" + file_name, "r")
     except FileNotFoundError:
+        print_space(1)
         print("Incorrect directory or not a text file")
+        print_space(1)
         main()
     except PermissionError:
+        print_space(1)
         print("Directory did not point to a specific file or permission was denied")
+        print_space(1)
         main()
         
     for line in text_file:
@@ -64,7 +72,9 @@ def analyze_file(file_name):
             ping_list.append(int(re.split("[ ]", line)[4][5:][:-2]))
 
     if (len(ping_list) == 0):
+        print_space(1)
         print("Error with text file: found no ping data")
+        print_space(1)
         main()
     else:
         average_ping = int((sum(ping_list)/len(ping_list)))
@@ -100,7 +110,7 @@ def analyze_file(file_name):
 
 def print_space(number):
     for i in range(number):
-        print("                                                ")
+        print("")
 
 if __name__ == "__main__":
     main()
