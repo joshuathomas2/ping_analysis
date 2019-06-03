@@ -45,7 +45,7 @@ def analyze_file(file_name):
     large_ping_count = 0
     extreme_ping_count = 0
 
-    print_space(1)
+    print_space(14)
     print("Attempting to analyze... " + file_name)
 
     text_file = open("data/" + file_name, "r")
@@ -98,10 +98,10 @@ def analyze_file(file_name):
     print("MINIMUM ping:", min(ping_list))
     print("AVERAGE ping:", average_ping)
     print("====================================================")
-    print_space(1)
+    print_space(15)
 
     input("Press enter to continue...")
-    print_space(1)
+    print_space(20)
     
     return 1
 
