@@ -4,14 +4,7 @@ import sys
 
 def main():
     analyze_file(choose_file())
-
-    print("Analyze another file? (y/n)")
-    answer = input()
-    
-    if (answer.lower() == "y"):
-        main()
-    else:
-        return 1
+    main()
 
 def choose_file():
     data = os.listdir("data")
@@ -20,9 +13,24 @@ def choose_file():
 
     for choice in user_choices:
         print(choice[0], ":", choice[1])
+        
+    choice = input("Enter the number of the file you wish to analyze (enter nothing to quit):")
 
-    print("Enter the number of the file you wish to analyze:")
-    choice = user_choices[int(input())][1]
+    if (choice == ""):
+        sys.exit()
+
+    try:
+        choice = int(choice)
+    except ValueError:
+        print("Invalid number")
+        main()
+
+    if ((choice > len(user_choices) - 1) or (choice < 0)):
+        print("Invalid number")
+        main()
+    else:
+        choice = user_choices[choice][1]
+            
     return choice
 
 def analyze_file(file_name):
