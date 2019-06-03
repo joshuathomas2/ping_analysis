@@ -19,9 +19,9 @@ def choose_file():
     user_choices = list(zip(file_count, data))
 
     for choice in user_choices:
-        print(choice)
+        print(choice[0], ":", choice[1])
 
-    print("Enter the number of the file you wish to anaylze:")
+    print("Enter the number of the file you wish to analyze:")
     choice = user_choices[int(input())][1]
     return choice
 

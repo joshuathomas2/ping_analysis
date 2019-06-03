@@ -2,9 +2,10 @@
 
 - small ping analysis tool
 - run ping_analysis.py
-- enter full path of text file to analyze 
-- sample text files found in /test_files
+- enter number corresponding to the file you wish to analyze
+- sample files found in /data
+- add your own files to /data and run ping_analysis.py to anaylze them
 
 - to create your own file open command prompt and type:
 	ping [address] -t > [filename.txt]
-- then run ping_analysis.py and input the full directory to your text file
+- then add this text file into the /data directory.
