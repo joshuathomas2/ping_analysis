@@ -47,7 +47,6 @@ def analyze_file(file_name):
 
     print_space(1)
     print("Attempting to analyze... " + file_name)
-    print_space(1)
 
     text_file = open("data/" + file_name, "r")
         
