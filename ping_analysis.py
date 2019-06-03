@@ -92,8 +92,6 @@ def analyze_file(file_name):
     return 1
 
 def print_error(error):
-    #no_data, invalid_number
-
     if (error == "no_data"):
         print_space(1)
         print("Error with text file: found no ping data")
