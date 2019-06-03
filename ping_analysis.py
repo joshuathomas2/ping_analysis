@@ -24,15 +24,11 @@ def choose_file():
     try:
         choice = int(choice)
     except ValueError:
-        print_space(1)
-        print("Invalid number")
-        print_space(1)
+        print_error("invalid_number")
         main()
 
     if ((choice > len(user_choices) - 1) or (choice < 0)):
-        print_space(1)
-        print("Invalid number")
-        print_space(1)
+        print_error("invalid_number")
         main()
     else:
         choice = user_choices[choice][1]
@@ -61,9 +57,7 @@ def analyze_file(file_name):
             ping_list.append(int(re.split("[ ]", line)[4][5:][:-2]))
 
     if (len(ping_list) == 0):
-        print_space(1)
-        print("Error with text file: found no ping data")
-        print_space(1)
+        print_error("no_data")
         main()
     else:
         average_ping = int((sum(ping_list)/len(ping_list)))
@@ -97,6 +91,18 @@ def analyze_file(file_name):
     print_space(3)
 
     return 1
+
+def print_error(error):
+    #no_data, invalid_number
+
+    if (error == "no_data"):
+        print_space(1)
+        print("Error with text file: found no ping data")
+        print_space(1)
+    elif (error == "invalid_number"):
+        print_space(1)
+        print("Invalid number")
+        print_space(1)
 
 def print_space(number):
     for i in range(number):
