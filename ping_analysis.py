@@ -1,8 +1,9 @@
+import os
 import re
 import sys
 
 def main():
-    analyze_file(get_path())
+    analyze_file(choose_file())
 
     print("Analyze another file? (y/n)")
     answer = input()
@@ -12,17 +13,19 @@ def main():
     else:
         return 1
 
-def get_path():
-    print("Enter the full path to the desired text file (press enter with no input to end program):")
-    file_path = input()
+def choose_file():
+    data = os.listdir("data")
+    file_count = list(range(len(data)))
+    user_choices = list(zip(file_count, data))
 
-    if (file_path == ""):
-        sys.exit()
-    else:
-        print("Attempting to analyze... " + file_path)
-        return file_path
+    for choice in user_choices:
+        print(choice)
 
-def analyze_file(file_path):
+    print("Enter the number of the file you wish to anaylze:")
+    choice = user_choices[int(input())][1]
+    return choice
+
+def analyze_file(file_name):
     ping_list = []
     ping_count = 0
     average_ping = 0
@@ -32,8 +35,10 @@ def analyze_file(file_path):
     large_ping_count = 0
     extreme_ping_count = 0
 
+    print("Attempting to analyze... " + file_name)
+
     try:
-        text_file = open(file_path, "r")
+        text_file = open("data/" + file_name, "r")
     except FileNotFoundError:
         print("Incorrect directory or not a text file")
         main()
