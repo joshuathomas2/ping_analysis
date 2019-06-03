@@ -99,6 +99,9 @@ def analyze_file(file_name):
     print("AVERAGE ping:", average_ping)
     print("====================================================")
     print_space(1)
+
+    input("Press enter to continue...")
+    print_space(1)
     
     return 1
 
