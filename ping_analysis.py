@@ -94,7 +94,7 @@ def analyze_file(file_name):
 def print_error(error):
     if (error == "no_data"):
         print_space(1)
-        print("Error with text file: found no ping data")
+        print("Error with text file: No data found or file is not in UTF-8")
         print_space(1)
     elif (error == "invalid_number"):
         print_space(1)
