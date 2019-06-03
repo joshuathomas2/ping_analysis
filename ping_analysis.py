@@ -13,6 +13,8 @@ def choose_file():
 
     for choice in user_choices:
         print(choice[0], ":", choice[1])
+
+    print_space(1)
         
     choice = input("Enter the number of the file you wish to analyze (enter nothing to quit):")
 
@@ -43,7 +45,9 @@ def analyze_file(file_name):
     large_ping_count = 0
     extreme_ping_count = 0
 
+    print_space(1)
     print("Attempting to analyze... " + file_name)
+    print_space(1)
 
     try:
         text_file = open("data/" + file_name, "r")
@@ -90,7 +94,13 @@ def analyze_file(file_name):
     print("AVERAGE ping:", average_ping)
     print("====================================================")
 
+    print_space(3)
+
     return 1
+
+def print_space(number):
+    for i in range(number):
+        print("                                                ")
 
 if __name__ == "__main__":
     main()
