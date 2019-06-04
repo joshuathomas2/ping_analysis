@@ -38,6 +38,7 @@ def choose_file():
 def analyze_file(file_name):
     ping_list = []
     ping_count = 0
+    lagspike_count = 0
     average_ping = 0
     tiny_ping_count = 0
     small_ping_count = 0
@@ -74,6 +75,8 @@ def analyze_file(file_name):
         elif (ping > 1):
             tiny_ping_count += 1
 
+    lagspike_count = medium_ping_count + large_ping_count + extreme_ping_count
+
     print("====================================================")
     print("[", file_name, "]", "Total ping count: ", ping_count)
     print("====================================================")
@@ -97,8 +100,11 @@ def analyze_file(file_name):
     print("MAXIMUM ping:", max(ping_list))
     print("MINIMUM ping:", min(ping_list))
     print("MEAN ping:", average_ping)
+    print_space(1)
+    print("Lagged", lagspike_count, "times out of", ping_count, "(>75ms)",
+    round((lagspike_count / ping_count) * 100,2), "%")
     print("====================================================")
-    print_space(15)
+    print_space(13)
 
     input("Press enter to continue...")
     print_space(20)
