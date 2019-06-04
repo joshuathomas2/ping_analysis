@@ -53,7 +53,7 @@ def analyze_file(file_name):
     for line in text_file:
         if (line[0:5] == "Reply"):
             ping_count += 1
-            ping_time = int(re.split("[ ]", line)[4][5:][:-2])
+            ping_time = int(re.split(" ", line)[4][5:][:-2])
             ping_list.append(ping_time)
 
     if (len(ping_list) == 0):
@@ -96,7 +96,7 @@ def analyze_file(file_name):
     print_space(1)
     print("MAXIMUM ping:", max(ping_list))
     print("MINIMUM ping:", min(ping_list))
-    print("AVERAGE ping:", average_ping)
+    print("MEAN ping:", average_ping)
     print("====================================================")
     print_space(15)
 
