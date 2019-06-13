@@ -126,8 +126,8 @@ class PingAnalysisGui:
         self.large_ping_count = 0
         self.extreme_ping_count = 0
 
-    def get_data(self, directory):
-        data = os.listdir(directory)
+    def get_data(self):
+        data = os.listdir(self.DIRECTORY)
         return data
 
     def get_selection(self):
@@ -145,7 +145,7 @@ class PingAnalysisGui:
 
     def configure_buttons(self):
         self.button_analyze.configure(command=self.analyze)
-        self.button_refresh.configure(command=lambda: self.populate_listbox(self.get_data(self.DIRECTORY)))
+        self.button_refresh.configure(command=lambda: self.populate_listbox(self.get_data()))
         self.button_open_folder.configure(command=self.open_folder)
 
     def generate_list(self):
@@ -209,7 +209,7 @@ class PingAnalysisGui:
 def main():
     pag = PingAnalysisGui()
     pag.configure_buttons()
-    pag.populate_listbox(pag.get_data(pag.DIRECTORY))
+    pag.populate_listbox(pag.get_data())
     pag.start_mainloop()
 
 
