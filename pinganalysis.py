@@ -105,11 +105,12 @@ class PingAnalysisGui:
     def get_selection(self):
         self.selection_index = self.listbox_data.curselection()
 
-        try:
-            self.selection = self.listbox_data.get(self.selection_index)
-        except TclError:
+        if self.selection_index == ():
+            self.selection = None
             self.clear_labels()
             self.label_error.configure(text="ERROR: No file selected")
+        else:
+            self.selection = self.listbox_data.get(self.selection_index)
 
     def open_folder(self):
         self.file_dialog.askopenfilename(initialdir=f"{self.DIRECTORY}")
@@ -154,33 +155,33 @@ class PingAnalysisGui:
             else:
                 mean_ping = int((sum(ping_list) / len(ping_list)))
 
-        if error:
-            pass
-        else:
-            for ping in ping_list:
-                if ping > 200:
-                    extreme_ping_count += 1
-                elif ping > 100:
-                    large_ping_count += 1
-                elif ping > 75:
-                    medium_ping_count += 1
-                elif ping > 25:
-                    small_ping_count += 1
-                elif ping > 1:
-                    tiny_ping_count += 1
+            if error:
+                pass
+            else:
+                for ping in ping_list:
+                    if ping > 200:
+                        extreme_ping_count += 1
+                    elif ping > 100:
+                        large_ping_count += 1
+                    elif ping > 75:
+                        medium_ping_count += 1
+                    elif ping > 25:
+                        small_ping_count += 1
+                    elif ping > 1:
+                        tiny_ping_count += 1
 
-            lag_count = medium_ping_count + large_ping_count + extreme_ping_count
+                lag_count = medium_ping_count + large_ping_count + extreme_ping_count
 
-            self.label_file.configure(text=f"[{self.selection}] Total ping count: {ping_count}")
-            self.label_tiny_ping.configure(text=f"Tiny ping count: {tiny_ping_count} (>1ms)")
-            self.label_small_ping.configure(text=f"Small ping count: {small_ping_count} (>25ms)")
-            self.label_medium_ping.configure(text=f"Medium ping count: {medium_ping_count} (>75ms)")
-            self.label_large_ping.configure(text=f"Large ping count: {large_ping_count} (>100ms)")
-            self.label_extreme_ping.configure(text=f"Extreme ping count: {extreme_ping_count} (>200ms)")
-            self.label_max_ping.configure(text=f"MAXIMUM ping count: {max(ping_list)}")
-            self.label_min_ping.configure(text=f"MINIMUM ping count: {min(ping_list)}")
-            self.label_mean_ping.configure(text=f"MEAN ping count: {mean_ping}")
-            self.label_lag_count.configure(text=f"Lagged {lag_count} times out of {ping_count} ({round(lag_count / ping_count * 100, 2)}%)")
+                self.label_file.configure(text=f"[{self.selection}] Total ping count: {ping_count}")
+                self.label_tiny_ping.configure(text=f"Tiny ping count: {tiny_ping_count} (>1ms)")
+                self.label_small_ping.configure(text=f"Small ping count: {small_ping_count} (>25ms)")
+                self.label_medium_ping.configure(text=f"Medium ping count: {medium_ping_count} (>75ms)")
+                self.label_large_ping.configure(text=f"Large ping count: {large_ping_count} (>100ms)")
+                self.label_extreme_ping.configure(text=f"Extreme ping count: {extreme_ping_count} (>200ms)")
+                self.label_max_ping.configure(text=f"MAXIMUM ping count: {max(ping_list)}")
+                self.label_min_ping.configure(text=f"MINIMUM ping count: {min(ping_list)}")
+                self.label_mean_ping.configure(text=f"MEAN ping count: {mean_ping}")
+                self.label_lag_count.configure(text=f"Lagged {lag_count} times out of {ping_count} ({round(lag_count / ping_count * 100, 2)}%)")
 
 
 def main():
