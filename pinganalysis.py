@@ -8,12 +8,13 @@ class PingAnalysisGui:
     def __init__(self):
         self.DIRECTORY = "raw_data"
         self.FONT = ("Times New Roman", "12")
-        self.FONT_LARGE = ("Times New Roman", "24", "bold")
         self.FONT_MEDIUM = ("Times New Roman", "16", "bold")
+        self.FONT_LARGE = ("Times New Roman", "24", "bold")
 
         self.root = Tk()
         self.root.title("Ping Analysis")
         self.root.geometry("750x500")
+        self.root.iconbitmap("images/favicon/favicon.ico")
 
         self.main_frame = Frame(self.root)
         self.main_frame.pack(side=LEFT, fill=BOTH)
@@ -33,19 +34,19 @@ class PingAnalysisGui:
         self.label_file = Label(self.data_frame, height=2, font=self.FONT_MEDIUM)
         self.label_file.pack()
 
-        self.label_tiny_ping = Label(self.data_frame)
+        self.label_tiny_ping = Label(self.data_frame, font=self.FONT)
         self.label_tiny_ping.pack()
 
-        self.label_small_ping = Label(self.data_frame)
+        self.label_small_ping = Label(self.data_frame, font=self.FONT)
         self.label_small_ping.pack()
 
-        self.label_medium_ping = Label(self.data_frame)
+        self.label_medium_ping = Label(self.data_frame, font=self.FONT)
         self.label_medium_ping.pack()
 
-        self.label_large_ping = Label(self.data_frame)
+        self.label_large_ping = Label(self.data_frame, font=self.FONT)
         self.label_large_ping.pack()
 
-        self.label_extreme_ping = Label(self.data_frame)
+        self.label_extreme_ping = Label(self.data_frame, font=self.FONT)
         self.label_extreme_ping.pack()
 
         self.label_max_ping = Label(self.data_frame, font=self.FONT_MEDIUM)
@@ -85,27 +86,6 @@ class PingAnalysisGui:
     def clear_listbox(self):
         self.listbox_data.delete(0, END)
 
-    def get_data(self, directory):
-        data = os.listdir(directory)
-        return data
-
-    def get_selection(self):
-        self.selection_index = self.listbox_data.curselection()
-
-        try:
-            self.selection = self.listbox_data.get(self.selection_index)
-            print(self.selection)
-        except TclError:
-            print("Invalid selection")
-
-    def open_folder(self):
-        self.file_dialog.askopenfilename(initialdir=f"{self.DIRECTORY}")
-
-    def configure_buttons(self):
-        self.button_analyze.configure(command=self.analyze)
-        self.button_refresh.configure(command=lambda: self.populate_listbox(self.get_data(self.DIRECTORY)))
-        self.button_open_folder.configure(command=self.open_folder)
-
     def clear_labels(self):
         self.label_tiny_ping.configure(text="")
         self.label_small_ping.configure(text="")
@@ -117,6 +97,27 @@ class PingAnalysisGui:
         self.label_mean_ping.configure(text="")
         self.label_file.configure(text="")
         self.label_lag_count.configure(text="")
+
+    def get_data(self, directory):
+        data = os.listdir(directory)
+        return data
+
+    def get_selection(self):
+        self.selection_index = self.listbox_data.curselection()
+
+        try:
+            self.selection = self.listbox_data.get(self.selection_index)
+        except TclError:
+            self.clear_labels()
+            self.label_error.configure(text="ERROR: No file selected")
+
+    def open_folder(self):
+        self.file_dialog.askopenfilename(initialdir=f"{self.DIRECTORY}")
+
+    def configure_buttons(self):
+        self.button_analyze.configure(command=self.analyze)
+        self.button_refresh.configure(command=lambda: self.populate_listbox(self.get_data(self.DIRECTORY)))
+        self.button_open_folder.configure(command=self.open_folder)
 
     def analyze(self):
         ping_list = []
@@ -135,6 +136,7 @@ class PingAnalysisGui:
         self.get_selection()
 
         if self.selection is None:
+            self.clear_labels()
             self.label_error.configure(text="ERROR: No file selected")
             error = True
         else:
