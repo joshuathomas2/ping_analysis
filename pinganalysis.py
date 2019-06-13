@@ -10,64 +10,80 @@ class PingAnalysisGui:
         self.FONT = ("Times New Roman", "12")
         self.FONT_MEDIUM = ("Times New Roman", "16", "bold")
         self.FONT_LARGE = ("Times New Roman", "24", "bold")
+        self.TINY_PING = 1
+        self.SMALL_PING = 25
+        self.MEDIUM_PING = 75
+        self.LARGE_PING = 100
+        self.EXTREME_PING = 200
+
+        self.ping_list = []
+        self.ping_count = 0
+        self.ping_time = 0
+        self.lag_count = 0
+        self.mean_ping = 0
+        self.tiny_ping_count = 0
+        self.small_ping_count = 0
+        self.medium_ping_count = 0
+        self.large_ping_count = 0
+        self.extreme_ping_count = 0
 
         self.root = Tk()
         self.root.title("Ping Analysis")
         self.root.geometry("750x500")
         self.root.iconbitmap("images/favicon/favicon.ico")
 
-        self.main_frame = Frame(self.root)
-        self.main_frame.pack(side=LEFT, fill=BOTH)
+        self.frame_main = Frame(self.root)
+        self.frame_main.pack(side=LEFT, fill=BOTH)
 
-        self.data_frame = Frame(self.root)
-        self.data_frame.pack(side=RIGHT, fill=BOTH, expand=1)
+        self.frame_data = Frame(self.root)
+        self.frame_data.pack(side=RIGHT, fill=BOTH, expand=1)
 
-        self.listbox_data = Listbox(self.main_frame, bg="gray", height=25)
+        self.listbox_data = Listbox(self.frame_main, bg="gray", height=25)
         self.listbox_data.pack(side=TOP)
 
-        self.label_title = Label(self.data_frame, height=3, text="Ping Analysis", font=self.FONT_LARGE)
+        self.label_title = Label(self.frame_data, height=3, text="Ping Analysis", font=self.FONT_LARGE)
         self.label_title.pack(fill=X)
 
-        self.label_error = Label(self.data_frame, fg="red", font=self.FONT_LARGE)
+        self.label_error = Label(self.frame_data, fg="red", font=self.FONT_LARGE)
         self.label_error.pack()
 
-        self.label_file = Label(self.data_frame, height=2, font=self.FONT_MEDIUM)
+        self.label_file = Label(self.frame_data, height=2, font=self.FONT_MEDIUM)
         self.label_file.pack()
 
-        self.label_tiny_ping = Label(self.data_frame, font=self.FONT)
+        self.label_tiny_ping = Label(self.frame_data, font=self.FONT)
         self.label_tiny_ping.pack()
 
-        self.label_small_ping = Label(self.data_frame, font=self.FONT)
+        self.label_small_ping = Label(self.frame_data, font=self.FONT)
         self.label_small_ping.pack()
 
-        self.label_medium_ping = Label(self.data_frame, font=self.FONT)
+        self.label_medium_ping = Label(self.frame_data, font=self.FONT)
         self.label_medium_ping.pack()
 
-        self.label_large_ping = Label(self.data_frame, font=self.FONT)
+        self.label_large_ping = Label(self.frame_data, font=self.FONT)
         self.label_large_ping.pack()
 
-        self.label_extreme_ping = Label(self.data_frame, font=self.FONT)
+        self.label_extreme_ping = Label(self.frame_data, font=self.FONT)
         self.label_extreme_ping.pack()
 
-        self.label_max_ping = Label(self.data_frame, font=self.FONT_MEDIUM)
+        self.label_max_ping = Label(self.frame_data, font=self.FONT_MEDIUM)
         self.label_max_ping.pack()
 
-        self.label_min_ping = Label(self.data_frame, font=self.FONT_MEDIUM)
+        self.label_min_ping = Label(self.frame_data, font=self.FONT_MEDIUM)
         self.label_min_ping.pack()
 
-        self.label_mean_ping = Label(self.data_frame, font=self.FONT_MEDIUM)
+        self.label_mean_ping = Label(self.frame_data, font=self.FONT_MEDIUM)
         self.label_mean_ping.pack()
 
-        self.label_lag_count = Label(self.data_frame, font=self.FONT_MEDIUM)
+        self.label_lag_count = Label(self.frame_data, font=self.FONT_MEDIUM)
         self.label_lag_count.pack()
 
-        self.button_analyze = Button(self.main_frame, text="Analyze")
+        self.button_analyze = Button(self.frame_main, text="Analyze")
         self.button_analyze.pack(fill=BOTH, expand=1)
 
-        self.button_refresh = Button(self.main_frame, text="Refresh List")
+        self.button_refresh = Button(self.frame_main, text="Refresh List")
         self.button_refresh.pack(fill=BOTH, expand=1)
 
-        self.button_open_folder = Button(self.main_frame, text="Open Folder")
+        self.button_open_folder = Button(self.frame_main, text="Open Folder")
         self.button_open_folder.pack(fill=BOTH, expand=1)
 
         self.file_dialog = filedialog
@@ -98,6 +114,18 @@ class PingAnalysisGui:
         self.label_file.configure(text="")
         self.label_lag_count.configure(text="")
 
+    def clear_variables(self):
+        self.ping_list = []
+        self.ping_count = 0
+        self.ping_time = 0
+        self.lag_count = 0
+        self.mean_ping = 0
+        self.tiny_ping_count = 0
+        self.small_ping_count = 0
+        self.medium_ping_count = 0
+        self.large_ping_count = 0
+        self.extreme_ping_count = 0
+
     def get_data(self, directory):
         data = os.listdir(directory)
         return data
@@ -113,75 +141,69 @@ class PingAnalysisGui:
             self.selection = self.listbox_data.get(self.selection_index)
 
     def open_folder(self):
-        self.file_dialog.askopenfilename(initialdir=f"{self.DIRECTORY}")
+        self.file_dialog.askopenfilename(initialdir=self.DIRECTORY)
 
     def configure_buttons(self):
         self.button_analyze.configure(command=self.analyze)
         self.button_refresh.configure(command=lambda: self.populate_listbox(self.get_data(self.DIRECTORY)))
         self.button_open_folder.configure(command=self.open_folder)
 
-    def analyze(self):
-        ping_list = []
-        ping_count = 0
-        lag_count = 0
-        mean_ping = 0
-        tiny_ping_count = 0
-        small_ping_count = 0
-        medium_ping_count = 0
-        large_ping_count = 0
-        extreme_ping_count = 0
-        error = False
+    def generate_list(self):
+        raw_data_file = open(self.DIRECTORY + "/" + self.selection)
 
+        for line in raw_data_file:
+            if line[0:5] == "Reply":
+                self.ping_count += 1
+                self.ping_time = int(re.split(" ", line)[4][5:][:-2])
+                self.ping_list.append(self.ping_time)
+
+    def analyze(self):
+        self.clear_variables()
         self.clear_labels()
         self.label_error.configure(text="")
+
         self.get_selection()
 
-        if self.selection is None:
+        if self.selection is not None:
+            self.generate_list()
+        else:
             self.clear_labels()
             self.label_error.configure(text="ERROR: No file selected")
-            error = True
+            return -1
+
+        if len(self.ping_list) != 0:
+            self.mean_ping = int((sum(self.ping_list) / len(self.ping_list)))
         else:
-            raw_data_file = open(self.DIRECTORY + "/" + self.selection)
+            self.clear_labels()
+            self.label_error.configure(text="ERROR: No data or file is not UTF-8")
+            return -1
 
-            for line in raw_data_file:
-                if line[0:5] == "Reply":
-                    ping_count += 1
-                    ping_time = int(re.split(" ", line)[4][5:][:-2])
-                    ping_list.append(ping_time)
+        for ping in self.ping_list:
+            if ping > self.EXTREME_PING:
+                self.extreme_ping_count += 1
+            elif ping > self.LARGE_PING:
+                self.large_ping_count += 1
+            elif ping > self.MEDIUM_PING:
+                self.medium_ping_count += 1
+            elif ping > self.SMALL_PING:
+                self.small_ping_count += 1
+            elif ping > self.TINY_PING:
+                self.tiny_ping_count += 1
 
-            if len(ping_list) == 0:
-                self.label_error.configure(text="ERROR: No data or file is not UTF-8")
-                error = True
-            else:
-                mean_ping = int((sum(ping_list) / len(ping_list)))
+        self.lag_count = self.medium_ping_count + self.large_ping_count + self.extreme_ping_count
 
-            if error:
-                pass
-            else:
-                for ping in ping_list:
-                    if ping > 200:
-                        extreme_ping_count += 1
-                    elif ping > 100:
-                        large_ping_count += 1
-                    elif ping > 75:
-                        medium_ping_count += 1
-                    elif ping > 25:
-                        small_ping_count += 1
-                    elif ping > 1:
-                        tiny_ping_count += 1
+        self.label_file.configure(text=f"[{self.selection}] Total ping count: {self.ping_count}")
+        self.label_tiny_ping.configure(text=f"Tiny ping count: {self.tiny_ping_count} (>{self.TINY_PING}ms)")
+        self.label_small_ping.configure(text=f"Small ping count: {self.small_ping_count} (>{self.SMALL_PING}ms)")
+        self.label_medium_ping.configure(text=f"Medium ping count: {self.medium_ping_count} (>{self.MEDIUM_PING}ms)")
+        self.label_large_ping.configure(text=f"Large ping count: {self.large_ping_count} (>{self.LARGE_PING}ms)")
+        self.label_extreme_ping.configure(text=f"Extreme ping count: {self.extreme_ping_count} (>{self.EXTREME_PING}ms)")
+        self.label_max_ping.configure(text=f"MAXIMUM ping count: {max(self.ping_list)}")
+        self.label_min_ping.configure(text=f"MINIMUM ping count: {min(self.ping_list)}")
+        self.label_mean_ping.configure(text=f"MEAN ping count: {self.mean_ping}")
+        self.label_lag_count.configure(text=f"Lagged {self.lag_count} times out of {self.ping_count} ({round(self.lag_count / self.ping_count * 100, 2)}%)")
 
-                lag_count = medium_ping_count + large_ping_count + extreme_ping_count
-
-                self.label_file.configure(text=f"[{self.selection}] Total ping count: {ping_count}")
-                self.label_tiny_ping.configure(text=f"Tiny ping count: {tiny_ping_count} (>1ms)")
-                self.label_small_ping.configure(text=f"Small ping count: {small_ping_count} (>25ms)")
-                self.label_medium_ping.configure(text=f"Medium ping count: {medium_ping_count} (>75ms)")
-                self.label_large_ping.configure(text=f"Large ping count: {large_ping_count} (>100ms)")
-                self.label_extreme_ping.configure(text=f"Extreme ping count: {extreme_ping_count} (>200ms)")
-                self.label_max_ping.configure(text=f"MAXIMUM ping count: {max(ping_list)}")
-                self.label_min_ping.configure(text=f"MINIMUM ping count: {min(ping_list)}")
-                self.label_mean_ping.configure(text=f"MEAN ping count: {mean_ping}")
-                self.label_lag_count.configure(text=f"Lagged {lag_count} times out of {ping_count} ({round(lag_count / ping_count * 100, 2)}%)")
+        return 0
 
 
 def main():
