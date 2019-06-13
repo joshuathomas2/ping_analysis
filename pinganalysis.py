@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import filedialog
+import subprocess
 import os
 import re
 
@@ -86,7 +86,7 @@ class PingAnalysisGui:
         self.button_open_folder = Button(self.frame_main, text="Open Folder")
         self.button_open_folder.pack(fill=BOTH, expand=1)
 
-        self.file_dialog = filedialog
+        self.folder = subprocess
 
         self.selection_index = None
         self.selection = None
@@ -141,7 +141,7 @@ class PingAnalysisGui:
             self.selection = self.listbox_data.get(self.selection_index)
 
     def open_folder(self):
-        self.file_dialog.askopenfilename(initialdir=self.DIRECTORY)
+        self.folder.Popen(f"explorer {self.DIRECTORY}")
 
     def configure_buttons(self):
         self.button_analyze.configure(command=self.analyze)
