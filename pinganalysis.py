@@ -1,15 +1,21 @@
 import os
 import re
-import sys
+import pinganalysisgui as pag
+
 
 def main():
-    analyze_file(choose_file())
-    main()
+    window = pag.PingAnalysisGui()
+    window.configure_buttons()
+    window.populate_listbox(get_data(window.DIRECTORY))
+    window.start_mainloop()
 
-def choose_file():
-    data = os.listdir("data")
-    file_count = list(range(len(data)))
-    user_choices = list(zip(file_count, data))
+
+def get_data(directory):
+    data = os.listdir(directory)
+    return data
+
+    """
+    #user_choices = list(zip(file_count, data))
 
     for choice in user_choices:
         print(choice[0], ":", choice[1])
@@ -34,6 +40,8 @@ def choose_file():
         choice = user_choices[choice][1]
             
     return choice
+    """
+
 
 def analyze_file(file_name):
     ping_list = []
@@ -52,31 +60,34 @@ def analyze_file(file_name):
     text_file = open("data/" + file_name, "r")
         
     for line in text_file:
-        if (line[0:5] == "Reply"):
+        if line[0:5] == "Reply":
             ping_count += 1
             ping_time = int(re.split(" ", line)[4][5:][:-2])
             ping_list.append(ping_time)
 
-    if (len(ping_list) == 0):
+    if len(ping_list) == 0:
         print_error("no_data")
         main()
     else:
         average_ping = int((sum(ping_list)/len(ping_list)))
     
     for ping in ping_list:
-        if (ping > 200):
+        if ping > 20:
             extreme_ping_count += 1
-        elif (ping > 100):
+        elif ping > 100:
             large_ping_count += 1
-        elif (ping > 75):
+        elif ping > 75:
             medium_ping_count += 1
-        elif (ping > 25):
+        elif ping > 25:
             small_ping_count += 1
-        elif (ping > 1):
+        elif ping > 1:
             tiny_ping_count += 1
 
     lagspike_count = medium_ping_count + large_ping_count + extreme_ping_count
 
+
+
+    """
     print("====================================================")
     print("[", file_name, "]", "Total ping count: ", ping_count)
     print("====================================================")
@@ -105,25 +116,28 @@ def analyze_file(file_name):
     round((lagspike_count / ping_count) * 100,2), "%")
     print("====================================================")
     print_space(13)
-
+    """
     input("Press enter to continue...")
     print_space(20)
     
     return 1
 
+
 def print_error(error):
-    if (error == "no_data"):
+    if error == "no_data":
         print_space(1)
         print("Error with text file: No data found or file is not in UTF-8")
         print_space(1)
-    elif (error == "invalid_number"):
+    elif error == "invalid_number":
         print_space(1)
         print("Invalid number")
         print_space(1)
 
+
 def print_space(number):
     for i in range(number):
         print("")
+
 
 if __name__ == "__main__":
     main()
