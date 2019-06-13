@@ -4,15 +4,10 @@ import pinganalysisgui as pag
 
 
 def main():
-    window = pag.PingAnalysisGui()
-    window.configure_buttons()
-    window.populate_listbox(get_data(window.DIRECTORY))
-    window.start_mainloop()
 
 
-def get_data(directory):
-    data = os.listdir(directory)
-    return data
+
+
 
     """
     #user_choices = list(zip(file_count, data))

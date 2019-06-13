@@ -1,5 +1,7 @@
 from tkinter import *
-import pinganalysis as pa
+from tkinter import filedialog
+import os
+import re
 
 
 class PingAnalysisGui:
@@ -55,11 +57,19 @@ class PingAnalysisGui:
         self.label_mean_ping = Label(self.data_frame, font=self.FONT_MEDIUM)
         self.label_mean_ping.pack()
 
-        self.analyze_button = Button(self.main_frame, text="Analyze")
-        self.analyze_button.pack(fill=BOTH, expand=1)
+        self.label_lag_count = Label(self.data_frame, font=self.FONT_MEDIUM)
+        self.label_lag_count.pack()
 
-        self.refresh_button = Button(self.main_frame, text="Refresh List")
-        self.refresh_button.pack(fill=BOTH, expand=1)
+        self.button_analyze = Button(self.main_frame, text="Analyze")
+        self.button_analyze.pack(fill=BOTH, expand=1)
+
+        self.button_refresh = Button(self.main_frame, text="Refresh List")
+        self.button_refresh.pack(fill=BOTH, expand=1)
+
+        self.button_open_folder = Button(self.main_frame, text="Open Folder")
+        self.button_open_folder.pack(fill=BOTH, expand=1)
+
+        self.file_dialog = filedialog
 
         self.selection_index = None
         self.selection = None
@@ -75,6 +85,10 @@ class PingAnalysisGui:
     def clear_listbox(self):
         self.listbox_data.delete(0, END)
 
+    def get_data(self, directory):
+        data = os.listdir(directory)
+        return data
+
     def get_selection(self):
         self.selection_index = self.listbox_data.curselection()
 
@@ -84,15 +98,31 @@ class PingAnalysisGui:
         except TclError:
             print("Invalid selection")
 
+    def open_folder(self):
+        self.file_dialog.askopenfilename(initialdir=f"{self.DIRECTORY}")
+
     def configure_buttons(self):
-        self.analyze_button.configure(command=self.analyze)
-        self.refresh_button.configure(command=lambda: self.populate_listbox(pa.get_data(self.DIRECTORY)))
+        self.button_analyze.configure(command=self.analyze)
+        self.button_refresh.configure(command=lambda: self.populate_listbox(self.get_data(self.DIRECTORY)))
+        self.button_open_folder.configure(command=self.open_folder)
+
+    def clear_labels(self):
+        self.label_tiny_ping.configure(text="")
+        self.label_small_ping.configure(text="")
+        self.label_medium_ping.configure(text="")
+        self.label_large_ping.configure(text="")
+        self.label_extreme_ping.configure(text="")
+        self.label_max_ping.configure(text="")
+        self.label_min_ping.configure(text="")
+        self.label_mean_ping.configure(text="")
+        self.label_file.configure(text="")
+        self.label_lag_count.configure(text="")
 
     def analyze(self):
         ping_list = []
         ping_count = 0
-        lagspike_count = 0
-        average_ping = 0
+        lag_count = 0
+        mean_ping = 0
         tiny_ping_count = 0
         small_ping_count = 0
         medium_ping_count = 0
@@ -100,6 +130,7 @@ class PingAnalysisGui:
         extreme_ping_count = 0
         error = False
 
+        self.clear_labels()
         self.label_error.configure(text="")
         self.get_selection()
 
@@ -119,7 +150,7 @@ class PingAnalysisGui:
                 self.label_error.configure(text="ERROR: No data or file is not UTF-8")
                 error = True
             else:
-                average_ping = int((sum(ping_list) / len(ping_list)))
+                mean_ping = int((sum(ping_list) / len(ping_list)))
 
         if error:
             pass
@@ -136,19 +167,26 @@ class PingAnalysisGui:
                 elif ping > 1:
                     tiny_ping_count += 1
 
-            lagspike_count = medium_ping_count + large_ping_count + extreme_ping_count
+            lag_count = medium_ping_count + large_ping_count + extreme_ping_count
 
-            self.label_file.configure(text="[" + self.selection + "] " + "Total ping count: " + str(ping_count))
-            self.label_tiny_ping.configure(text="Tiny ping count: " + str(tiny_ping_count) + " (>1ms)")
-            self.label_small_ping.configure(text="Small ping count: " + str(small_ping_count) + " (>25ms)")
-            self.label_medium_ping.configure(text="Medium ping count: " + str(medium_ping_count) + " (>75ms)")
-            self.label_large_ping.configure(text="Large ping count: " + str(large_ping_count) + " (>100ms)")
-            self.label_extreme_ping.configure(text="Extreme ping count: " + str(extreme_ping_count) + " (>200ms)")
-            self.label_max_ping.configure(text="MAXIMUM ping count: " + str(max(ping_list)))
-            self.label_min_ping.configure(text="MINIMUM ping count: " + str(min(ping_list)))
-            self.label_mean_ping.configure(text="MEAN ping count: " + str(average_ping))
-
-
-
+            self.label_file.configure(text=f"[{self.selection}] Total ping count: {ping_count}")
+            self.label_tiny_ping.configure(text=f"Tiny ping count: {tiny_ping_count} (>1ms)")
+            self.label_small_ping.configure(text=f"Small ping count: {small_ping_count} (>25ms)")
+            self.label_medium_ping.configure(text=f"Medium ping count: {medium_ping_count} (>75ms)")
+            self.label_large_ping.configure(text=f"Large ping count: {large_ping_count} (>100ms)")
+            self.label_extreme_ping.configure(text=f"Extreme ping count: {extreme_ping_count} (>200ms)")
+            self.label_max_ping.configure(text=f"MAXIMUM ping count: {max(ping_list)}")
+            self.label_min_ping.configure(text=f"MINIMUM ping count: {min(ping_list)}")
+            self.label_mean_ping.configure(text=f"MEAN ping count: {mean_ping}")
+            self.label_lag_count.configure(text=f"Lagged {lag_count} times out of {ping_count} ({round(lag_count / ping_count * 100, 2)}%)")
 
 
+def main():
+    pag = PingAnalysisGui()
+    pag.configure_buttons()
+    pag.populate_listbox(pag.get_data(pag.DIRECTORY))
+    pag.start_mainloop()
+
+
+if __name__ == "__main__":
+    main()
