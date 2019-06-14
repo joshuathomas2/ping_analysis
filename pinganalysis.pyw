@@ -264,7 +264,7 @@ class PingAnalysisGui:
         self.label_max_ping.configure(text=f"MAXIMUM ping count: {max(self.ping_list)}")
         self.label_min_ping.configure(text=f"MINIMUM ping count: {min(self.ping_list)}")
         self.label_mean_ping.configure(text=f"MEAN ping count: {self.mean_ping}")
-        self.label_lag_count.configure(text=f"Lagged {self.lag_count} times out of {self.ping_count} {self.lag_percentage}%")
+        self.label_lag_count.configure(text=f"Lagged {self.lag_count} times out of {self.ping_count} ({self.lag_percentage}%)")
 
         if self.lag_percentage > 5.0:
             self.label_lag_analysis.configure(text="Severe Lag")
