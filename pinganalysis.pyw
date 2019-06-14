@@ -10,6 +10,10 @@ class PingAnalysisGui:
         self.FONT = ("Times New Roman", "12")
         self.FONT_MEDIUM = ("Times New Roman", "16", "bold")
         self.FONT_LARGE = ("Times New Roman", "24", "bold")
+        self.DEFAULT_BG = "SystemButtonFace"
+        self.DEFAULT_FG = "black"
+        self.DEFAULT_DARK_BG = "black"
+        self.DEFAULT_DARK_FG = "white"
         self.TINY_PING = 1
         self.SMALL_PING = 25
         self.MEDIUM_PING = 75
@@ -27,10 +31,11 @@ class PingAnalysisGui:
         self.medium_ping_count = 0
         self.large_ping_count = 0
         self.extreme_ping_count = 0
+        self.theme = True
 
         self.root = Tk()
         self.root.title("Ping Analysis")
-        self.root.geometry("750x500")
+        self.root.geometry("750x550")
         self.root.iconbitmap("images/favicon/favicon.ico")
 
         self.frame_main = Frame(self.root)
@@ -39,7 +44,7 @@ class PingAnalysisGui:
         self.frame_data = Frame(self.root)
         self.frame_data.pack(side=RIGHT, fill=BOTH, expand=1)
 
-        self.listbox_data = Listbox(self.frame_main, bg="gray", height=25)
+        self.listbox_data = Listbox(self.frame_main, height=25)
         self.listbox_data.pack(side=TOP)
 
         self.label_title = Label(self.frame_data, height=2, text="Ping Analysis", font=self.FONT_LARGE)
@@ -90,6 +95,9 @@ class PingAnalysisGui:
         self.button_open_folder = Button(self.frame_main, text="Open Folder")
         self.button_open_folder.pack(fill=BOTH, expand=1)
 
+        self.button_toggle_theme = Button(self.frame_main, text="Toggle Theme")
+        self.button_toggle_theme.pack(fill=BOTH, expand=1)
+
         self.folder = subprocess
 
         self.selection_index = None
@@ -132,6 +140,52 @@ class PingAnalysisGui:
         self.large_ping_count = 0
         self.extreme_ping_count = 0
 
+    def toggle_theme(self):
+        if self.theme:
+            self.theme = False
+            self.frame_main.configure(bg=self.DEFAULT_DARK_BG)
+            self.frame_data.configure(bg=self.DEFAULT_DARK_BG)
+            self.listbox_data.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.button_toggle_theme.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.button_analyze.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.button_open_folder.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.button_refresh.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.label_title.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.label_error.configure(bg=self.DEFAULT_DARK_BG)
+            self.label_tiny_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.label_small_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.label_medium_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.label_large_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.label_extreme_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.label_max_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.label_min_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.label_mean_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.label_file.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.label_lag_count.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.label_lag_analysis.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+        else:
+            self.theme = True
+            self.frame_main.configure(bg=self.DEFAULT_BG)
+            self.frame_data.configure(bg=self.DEFAULT_BG)
+            self.listbox_data.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.button_toggle_theme.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.button_analyze.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.button_open_folder.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.button_refresh.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.label_title.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.label_error.configure(bg=self.DEFAULT_BG)
+            self.label_tiny_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.label_small_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.label_medium_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.label_large_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.label_extreme_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.label_max_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.label_min_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.label_mean_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.label_file.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.label_lag_count.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.label_lag_analysis.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+
     def get_data(self):
         data = os.listdir(self.DIRECTORY)
         return data
@@ -154,6 +208,7 @@ class PingAnalysisGui:
         self.button_analyze.configure(command=self.analyze)
         self.button_refresh.configure(command=lambda: self.populate_listbox(self.get_data()))
         self.button_open_folder.configure(command=self.open_folder)
+        self.button_toggle_theme.configure(command=self.toggle_theme)
 
     def generate_list(self):
         raw_data_file = open(self.DIRECTORY + "/" + self.selection)
