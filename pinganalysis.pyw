@@ -20,6 +20,7 @@ class PingAnalysisGui:
         self.ping_count = 0
         self.ping_time = 0
         self.lag_count = 0
+        self.lag_percentage = 0.0
         self.mean_ping = 0
         self.tiny_ping_count = 0
         self.small_ping_count = 0
@@ -41,13 +42,13 @@ class PingAnalysisGui:
         self.listbox_data = Listbox(self.frame_main, bg="gray", height=25)
         self.listbox_data.pack(side=TOP)
 
-        self.label_title = Label(self.frame_data, height=3, text="Ping Analysis", font=self.FONT_LARGE)
+        self.label_title = Label(self.frame_data, height=2, text="Ping Analysis", font=self.FONT_LARGE)
         self.label_title.pack(fill=X)
 
         self.label_error = Label(self.frame_data, fg="red", font=self.FONT_LARGE)
         self.label_error.pack()
 
-        self.label_file = Label(self.frame_data, height=2, font=self.FONT_MEDIUM)
+        self.label_file = Label(self.frame_data, height=1, font=self.FONT_MEDIUM)
         self.label_file.pack()
 
         self.label_tiny_ping = Label(self.frame_data, font=self.FONT)
@@ -76,6 +77,9 @@ class PingAnalysisGui:
 
         self.label_lag_count = Label(self.frame_data, font=self.FONT_MEDIUM)
         self.label_lag_count.pack()
+
+        self.label_lag_analysis = Label(self.frame_data, font=self.FONT_MEDIUM)
+        self.label_lag_analysis.pack()
 
         self.button_analyze = Button(self.frame_main, text="Analyze")
         self.button_analyze.pack(fill=BOTH, expand=1)
@@ -113,12 +117,14 @@ class PingAnalysisGui:
         self.label_mean_ping.configure(text="")
         self.label_file.configure(text="")
         self.label_lag_count.configure(text="")
+        self.label_lag_analysis.configure(text="")
 
     def clear_variables(self):
         self.ping_list = []
         self.ping_count = 0
         self.ping_time = 0
         self.lag_count = 0
+        self.lag_percentage = 0.0
         self.mean_ping = 0
         self.tiny_ping_count = 0
         self.small_ping_count = 0
@@ -192,6 +198,7 @@ class PingAnalysisGui:
                 self.tiny_ping_count += 1
 
         self.lag_count = self.medium_ping_count + self.large_ping_count + self.extreme_ping_count
+        self.lag_percentage = round(self.lag_count / self.ping_count * 100, 2)
 
         self.label_file.configure(text=f"[{self.selection}] Total ping count: {self.ping_count}")
         self.label_tiny_ping.configure(text=f"Tiny ping count: {self.tiny_ping_count} (>{self.TINY_PING}ms)")
@@ -202,7 +209,17 @@ class PingAnalysisGui:
         self.label_max_ping.configure(text=f"MAXIMUM ping count: {max(self.ping_list)}")
         self.label_min_ping.configure(text=f"MINIMUM ping count: {min(self.ping_list)}")
         self.label_mean_ping.configure(text=f"MEAN ping count: {self.mean_ping}")
-        self.label_lag_count.configure(text=f"Lagged {self.lag_count} times out of {self.ping_count} ({round(self.lag_count / self.ping_count * 100, 2)}%)")
+        self.label_lag_count.configure(text=f"Lagged {self.lag_count} times out of {self.ping_count} {self.lag_percentage}%")
+
+        if self.lag_percentage > 5.0:
+            self.label_lag_analysis.configure(text="Severe Lag")
+            self.label_lag_analysis.configure(fg="red")
+        elif self.lag_percentage > 3.0:
+            self.label_lag_analysis.configure(text="Moderate Lag")
+            self.label_lag_analysis.configure(fg="yellow")
+        else:
+            self.label_lag_analysis.configure(text="Low Lag")
+            self.label_lag_analysis.configure(fg="green")
 
         return 0
 
