@@ -95,7 +95,7 @@ class PingAnalysisGui:
         self.button_open_folder = Button(self.frame_main, text="Open Folder")
         self.button_open_folder.pack(fill=BOTH, expand=1)
 
-        self.button_toggle_theme = Button(self.frame_main, text="Toggle Theme")
+        self.button_toggle_theme = Button(self.frame_main, text="Dark Theme")
         self.button_toggle_theme.pack(fill=BOTH, expand=1)
 
         self.folder = subprocess
@@ -143,6 +143,7 @@ class PingAnalysisGui:
     def toggle_theme(self):
         if self.theme:
             self.theme = False
+            self.button_toggle_theme.configure(text="Light Theme")
             self.frame_main.configure(bg=self.DEFAULT_DARK_BG)
             self.frame_data.configure(bg=self.DEFAULT_DARK_BG)
             self.listbox_data.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
@@ -165,6 +166,7 @@ class PingAnalysisGui:
             self.label_lag_analysis.configure(bg=self.DEFAULT_DARK_BG)
         else:
             self.theme = True
+            self.button_toggle_theme.configure(text="Dark Theme")
             self.frame_main.configure(bg=self.DEFAULT_BG)
             self.frame_data.configure(bg=self.DEFAULT_BG)
             self.listbox_data.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)

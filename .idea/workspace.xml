@@ -15,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pinganalysis.pyw">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="266" column="125" selection-start-line="266" selection-start-column="125" selection-end-line="266" selection-end-column="125" />
+            <state relative-caret-position="476">
+              <caret line="97" column="69" selection-start-line="97" selection-start-column="69" selection-end-line="97" selection-end-column="69" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -74,7 +74,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-7" />
     <option name="width" value="974" />
     <option name="height" value="1047" />
@@ -215,8 +215,8 @@
     <entry file="file://$PROJECT_DIR$/pinganalysisgui.py" />
     <entry file="file://$PROJECT_DIR$/pinganalysis.pyw">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="266" column="125" selection-start-line="266" selection-start-column="125" selection-end-line="266" selection-end-column="125" />
+        <state relative-caret-position="476">
+          <caret line="97" column="69" selection-start-line="97" selection-start-column="69" selection-end-line="97" selection-end-column="69" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>
