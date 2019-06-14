@@ -131,19 +131,20 @@ class PingAnalysisGui:
         return data
 
     def get_selection(self):
+
         self.selection_index = self.listbox_data.curselection()
 
-        if self.selection_index == ():
+        if self.selection_index != ():
+            self.selection = self.listbox_data.get(self.selection_index)
+        else:
             self.selection = None
             self.clear_labels()
             self.label_error.configure(text="ERROR: No file selected")
-        else:
-            self.selection = self.listbox_data.get(self.selection_index)
 
     def open_folder(self):
         self.folder.Popen(f"explorer {self.DIRECTORY}")
 
-    def configure_buttons(self):
+    def configure_commands(self):
         self.button_analyze.configure(command=self.analyze)
         self.button_refresh.configure(command=lambda: self.populate_listbox(self.get_data()))
         self.button_open_folder.configure(command=self.open_folder)
@@ -208,7 +209,7 @@ class PingAnalysisGui:
 
 def main():
     pag = PingAnalysisGui()
-    pag.configure_buttons()
+    pag.configure_commands()
     pag.populate_listbox(pag.get_data())
     pag.start_mainloop()
 
