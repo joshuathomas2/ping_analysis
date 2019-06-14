@@ -162,7 +162,7 @@ class PingAnalysisGui:
             self.label_mean_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.label_file.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.label_lag_count.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_lag_analysis.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.label_lag_analysis.configure(bg=self.DEFAULT_DARK_BG)
         else:
             self.theme = True
             self.frame_main.configure(bg=self.DEFAULT_BG)
@@ -184,7 +184,7 @@ class PingAnalysisGui:
             self.label_mean_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.label_file.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.label_lag_count.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_lag_analysis.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.label_lag_analysis.configure(bg=self.DEFAULT_BG)
 
     def get_data(self):
         data = os.listdir(self.DIRECTORY)
