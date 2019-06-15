@@ -222,7 +222,7 @@ class PingAnalysisGui:
     def open_cmd(self):
         cwd = os.getcwd()
 
-        if cwd[-13:] == "ping_analysis":
+        if cwd[-13:] == "ping_analysis" or cwd[-20:] == "ping_analysis-master":
             os.chdir(self.DIRECTORY)
             os.system("start cmd")
         else:
