@@ -35,7 +35,7 @@ class PingAnalysisGui:
 
         self.root = Tk()
         self.root.title("Ping Analysis")
-        self.root.geometry("750x550")
+        self.root.geometry("750x575")
         self.root.iconbitmap("images/favicon/favicon.ico")
 
         self.frame_main = Frame(self.root)
@@ -86,11 +86,22 @@ class PingAnalysisGui:
         self.label_lag_analysis = Label(self.frame_data, font=self.FONT_MEDIUM)
         self.label_lag_analysis.pack()
 
+        '''
+        self.checkbutton_auto_analyze_status = IntVar()
+        self.checkbutton_auto_analyze = Checkbutton(self.frame_main,
+                                                    text="Auto-Analyze", variable=self.checkbutton_auto_analyze_status)
+        self.checkbutton_auto_analyze.pack(fill=BOTH, expand=1)
+        
+        '''
+
         self.button_analyze = Button(self.frame_main, text="Analyze")
         self.button_analyze.pack(fill=BOTH, expand=1)
 
         self.button_refresh = Button(self.frame_main, text="Refresh List")
         self.button_refresh.pack(fill=BOTH, expand=1)
+
+        self.button_open_cmd = Button(self.frame_main, text="Open CMD")
+        self.button_open_cmd.pack(fill=BOTH, expand=1)
 
         self.button_open_folder = Button(self.frame_main, text="Open Folder")
         self.button_open_folder.pack(fill=BOTH, expand=1)
@@ -149,6 +160,7 @@ class PingAnalysisGui:
             self.listbox_data.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.button_toggle_theme.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.button_analyze.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+            self.button_open_cmd.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.button_open_folder.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.button_refresh.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.label_title.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
@@ -172,6 +184,7 @@ class PingAnalysisGui:
             self.listbox_data.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.button_toggle_theme.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.button_analyze.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+            self.button_open_cmd.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.button_open_folder.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.button_refresh.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.label_title.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
@@ -206,11 +219,22 @@ class PingAnalysisGui:
     def open_folder(self):
         self.folder.Popen(f"explorer {self.DIRECTORY}")
 
+    def open_cmd(self):
+        cwd = os.getcwd()
+
+        if cwd[-13:] == "ping_analysis":
+            os.chdir(self.DIRECTORY)
+            os.system("start cmd")
+        else:
+            os.system("start cmd")
+        os.chdir("..")
+
     def configure_commands(self):
         self.button_analyze.configure(command=self.analyze)
         self.button_refresh.configure(command=lambda: self.populate_listbox(self.get_data()))
         self.button_open_folder.configure(command=self.open_folder)
         self.button_toggle_theme.configure(command=self.toggle_theme)
+        self.button_open_cmd.configure(command=self.open_cmd)
 
     def generate_list(self):
         raw_data_file = open(self.DIRECTORY + "/" + self.selection)
@@ -220,6 +244,10 @@ class PingAnalysisGui:
                 self.ping_count += 1
                 self.ping_time = int(re.split(" ", line)[4][5:][:-2])
                 self.ping_list.append(self.ping_time)
+
+    def check_auto_analyze(self):
+        if self.checkbutton_auto_analyze_status.get():
+            self.checkbutton_auto_analyze.after(250, self.analyze())
 
     def analyze(self):
         self.clear_variables()
