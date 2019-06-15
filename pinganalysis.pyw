@@ -1,12 +1,12 @@
 from tkinter import *
 import subprocess
+import json
 import os
 import re
 
 
 class PingAnalysisGui:
     def __init__(self):
-        self.DIRECTORY = "raw_data"
         self.FONT = ("Times New Roman", "12")
         self.FONT_MEDIUM = ("Times New Roman", "16", "bold")
         self.FONT_LARGE = ("Times New Roman", "24", "bold")
@@ -14,11 +14,18 @@ class PingAnalysisGui:
         self.DEFAULT_FG = "black"
         self.DEFAULT_DARK_BG = "black"
         self.DEFAULT_DARK_FG = "white"
-        self.TINY_PING = 1
-        self.SMALL_PING = 25
-        self.MEDIUM_PING = 75
-        self.LARGE_PING = 100
-        self.EXTREME_PING = 200
+
+        self.settings_file = open("settings.json", "r", encoding="utf-8")
+        self.settings_json = json.load(self.settings_file)
+        self.settings_file.close()
+
+        self.directory = self.settings_json["directory"]
+        self.theme = self.settings_json["theme"]
+        self.tiny_ping = self.settings_json["tiny_ping"]
+        self.small_ping = self.settings_json["small_ping"]
+        self.medium_ping = self.settings_json["medium_ping"]
+        self.large_ping = self.settings_json["large_ping"]
+        self.extreme_ping = self.settings_json["extreme_ping"]
 
         self.ping_list = []
         self.ping_count = 0
@@ -31,7 +38,7 @@ class PingAnalysisGui:
         self.medium_ping_count = 0
         self.large_ping_count = 0
         self.extreme_ping_count = 0
-        self.theme = True
+        self.theme_toggle = False if self.theme == "light" else True
 
         self.root = Tk()
         self.root.title("Ping Analysis")
@@ -92,7 +99,7 @@ class PingAnalysisGui:
                                                     text="Auto-Analyze", variable=self.checkbutton_auto_analyze_status)
         self.checkbutton_auto_analyze.pack(fill=BOTH, expand=1)
         '''
-        
+
         self.button_analyze = Button(self.frame_main, text="Analyze")
         self.button_analyze.pack(fill=BOTH, expand=1)
 
@@ -151,8 +158,9 @@ class PingAnalysisGui:
         self.extreme_ping_count = 0
 
     def toggle_theme(self):
-        if self.theme:
-            self.theme = False
+        if self.theme_toggle:
+            self.theme = "dark"
+            self.theme_toggle = False
             self.button_toggle_theme.configure(text="Light Theme")
             self.frame_main.configure(bg=self.DEFAULT_DARK_BG)
             self.frame_data.configure(bg=self.DEFAULT_DARK_BG)
@@ -176,7 +184,8 @@ class PingAnalysisGui:
             self.label_lag_count.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.label_lag_analysis.configure(bg=self.DEFAULT_DARK_BG)
         else:
-            self.theme = True
+            self.theme = "light"
+            self.theme_toggle = True
             self.button_toggle_theme.configure(text="Dark Theme")
             self.frame_main.configure(bg=self.DEFAULT_BG)
             self.frame_data.configure(bg=self.DEFAULT_BG)
@@ -201,7 +210,7 @@ class PingAnalysisGui:
             self.label_lag_analysis.configure(bg=self.DEFAULT_BG)
 
     def get_data(self):
-        data = os.listdir(self.DIRECTORY)
+        data = os.listdir(self.directory)
         return data
 
     def get_selection(self):
@@ -216,13 +225,13 @@ class PingAnalysisGui:
             self.label_error.configure(text="ERROR: No file selected")
 
     def open_folder(self):
-        self.folder.Popen(f"explorer {self.DIRECTORY}")
+        self.folder.Popen(f"explorer {self.directory}")
 
     def open_cmd(self):
         cwd = os.getcwd()
 
         if cwd[-13:] == "ping_analysis" or cwd[-20:] == "ping_analysis-master":
-            os.chdir(self.DIRECTORY)
+            os.chdir(self.directory)
             os.system("start cmd")
         else:
             os.system("start cmd")
@@ -234,9 +243,18 @@ class PingAnalysisGui:
         self.button_open_folder.configure(command=self.open_folder)
         self.button_toggle_theme.configure(command=self.toggle_theme)
         self.button_open_cmd.configure(command=self.open_cmd)
+        self.root.protocol("WM_DELETE_WINDOW", self.close_and_save)
+
+    def close_and_save(self):
+        self.settings_file = open("settings.json", "w")
+        self.settings_json["theme"] = self.theme
+        json.dump(self.settings_json, self.settings_file, indent=4)
+        self.settings_file.close()
+        print("settings saved", self.settings_json)
+        self.root.destroy()
 
     def generate_list(self):
-        raw_data_file = open(self.DIRECTORY + "/" + self.selection)
+        raw_data_file = open(self.directory + "/" + self.selection)
 
         for line in raw_data_file:
             if line[0:5] == "Reply":
@@ -270,31 +288,31 @@ class PingAnalysisGui:
             return -1
 
         for ping in self.ping_list:
-            if ping > self.EXTREME_PING:
+            if ping > self.extreme_ping:
                 self.extreme_ping_count += 1
-            elif ping > self.LARGE_PING:
+            elif ping > self.large_ping:
                 self.large_ping_count += 1
-            elif ping > self.MEDIUM_PING:
+            elif ping > self.medium_ping:
                 self.medium_ping_count += 1
-            elif ping > self.SMALL_PING:
+            elif ping > self.small_ping:
                 self.small_ping_count += 1
-            elif ping > self.TINY_PING:
+            elif ping > self.tiny_ping:
                 self.tiny_ping_count += 1
 
         self.lag_count = self.medium_ping_count + self.large_ping_count + self.extreme_ping_count
         self.lag_percentage = round(self.lag_count / self.ping_count * 100, 2)
 
         self.label_file.configure(text=f"[{self.selection}] Total ping count: {self.ping_count}")
-        self.label_tiny_ping.configure(text=f"Tiny ping count: {self.tiny_ping_count} (>{self.TINY_PING}ms)")
-        self.label_small_ping.configure(text=f"Small ping count: {self.small_ping_count} (>{self.SMALL_PING}ms)")
-        self.label_medium_ping.configure(text=f"Medium ping count: {self.medium_ping_count} (>{self.MEDIUM_PING}ms)")
-        self.label_large_ping.configure(text=f"Large ping count: {self.large_ping_count} (>{self.LARGE_PING}ms)")
-        self.label_extreme_ping.configure(text=f"Extreme ping count: {self.extreme_ping_count} (>{self.EXTREME_PING}ms)")
+        self.label_tiny_ping.configure(text=f"Tiny ping count: {self.tiny_ping_count} (>{self.tiny_ping}ms)")
+        self.label_small_ping.configure(text=f"Small ping count: {self.small_ping_count} (>{self.small_ping}ms)")
+        self.label_medium_ping.configure(text=f"Medium ping count: {self.medium_ping_count} (>{self.medium_ping}ms)")
+        self.label_large_ping.configure(text=f"Large ping count: {self.large_ping_count} (>{self.large_ping}ms)")
+        self.label_extreme_ping.configure(text=f"Extreme ping count: {self.extreme_ping_count} (>{self.extreme_ping}ms)")
         self.label_max_ping.configure(text=f"MAXIMUM ping count: {max(self.ping_list)}")
         self.label_min_ping.configure(text=f"MINIMUM ping count: {min(self.ping_list)}")
         self.label_mean_ping.configure(text=f"MEAN ping count: {self.mean_ping}")
         self.label_lag_count.configure(text=f"Lagged {self.lag_count} {'times' if self.lag_count > 1 else 'time'} "
-        f"out of {self.ping_count} ({self.lag_percentage}%)")
+                                       f"out of {self.ping_count} ({self.lag_percentage}%)")
 
         if self.lag_percentage > 5.0:
             self.label_lag_analysis.configure(text="Severe Lag")
@@ -311,6 +329,7 @@ class PingAnalysisGui:
 
 def main():
     pag = PingAnalysisGui()
+    pag.toggle_theme()
     pag.configure_commands()
     pag.populate_listbox(pag.get_data())
     pag.start_mainloop()

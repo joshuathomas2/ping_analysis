@@ -1,0 +1,9 @@
+{
+    "theme": "light",
+    "directory": "raw_data",
+    "tiny_ping": 1,
+    "small_ping": 25,
+    "medium_ping": 75,
+    "large_ping": 100,
+    "extreme_ping": 200
+}
