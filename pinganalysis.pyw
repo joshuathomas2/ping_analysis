@@ -318,7 +318,7 @@ class PingAnalysis:
 
         if self.lag_percentage > 10.0:
             self.label_lag_analysis.configure(text="Extremely Severe Lag", fg="red")
-        if self.lag_percentage > 5.0:
+        elif self.lag_percentage > 5.0:
             self.label_lag_analysis.configure(text="Severe Lag", fg="red")
         elif self.lag_percentage > 3.0:
             self.label_lag_analysis.configure(text="Moderate Lag", fg="yellow")
