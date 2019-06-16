@@ -310,12 +310,14 @@ class PingAnalysis:
         self.label_medium_ping.configure(text=f"Medium ping count: {self.medium_ping_count} (>{self.medium_ping}ms)")
         self.label_large_ping.configure(text=f"Large ping count: {self.large_ping_count} (>{self.large_ping}ms)")
         self.label_extreme_ping.configure(text=f"Extreme ping count: {self.extreme_ping_count} (>{self.extreme_ping}ms)")
-        self.label_max_ping.configure(text=f"MAXIMUM ping count: {max(self.ping_list)}")
-        self.label_min_ping.configure(text=f"MINIMUM ping count: {min(self.ping_list)}")
-        self.label_mean_ping.configure(text=f"MEAN ping count: {self.mean_ping}")
+        self.label_max_ping.configure(text=f"MAXIMUM ping: {max(self.ping_list)}")
+        self.label_min_ping.configure(text=f"MINIMUM ping: {min(self.ping_list)}")
+        self.label_mean_ping.configure(text=f"MEAN ping: {self.mean_ping}")
         self.label_lag_count.configure(text=f"Lagged {self.lag_count} {'time' if self.lag_count == 1 else 'times'} "
                                        f"out of {self.ping_count} ({self.lag_percentage}%)")
 
+        if self.lag_percentage > 10.0:
+            self.label_lag_analysis.configure(text="Extremely Severe Lag", fg="red")
         if self.lag_percentage > 5.0:
             self.label_lag_analysis.configure(text="Severe Lag", fg="red")
         elif self.lag_percentage > 3.0:
