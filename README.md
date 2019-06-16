@@ -4,6 +4,10 @@
 - Select file from listbox on the left to analyze
 - Once selected, press the Analyze button
 
+# settings.json
+- Set your own values in settings.json
+- pinganalysis.pyw will remember if you use Light Theme or Dark Theme the next time you run the program
+
 # Creating your own files
 - To create your own file to analyze click the Open CMD button
 - ping [address] -t > [filename.txt]

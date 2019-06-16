@@ -5,7 +5,7 @@ import os
 import re
 
 
-class PingAnalysisGui:
+class PingAnalysis:
     def __init__(self):
         self.FONT = ("Times New Roman", "12")
         self.FONT_MEDIUM = ("Times New Roman", "16", "bold")
@@ -15,7 +15,7 @@ class PingAnalysisGui:
         self.DEFAULT_DARK_BG = "black"
         self.DEFAULT_DARK_FG = "white"
 
-        self.settings_file = open("settings.json", "r", encoding="utf-8")
+        self.settings_file = open("settings.json", "r")
         self.settings_json = json.load(self.settings_file)
         self.settings_file.close()
 
@@ -26,6 +26,7 @@ class PingAnalysisGui:
         self.medium_ping = self.settings_json["medium_ping"]
         self.large_ping = self.settings_json["large_ping"]
         self.extreme_ping = self.settings_json["extreme_ping"]
+        self.version = self.settings_json["version"]
 
         self.ping_list = []
         self.ping_count = 0
@@ -41,7 +42,7 @@ class PingAnalysisGui:
         self.theme_toggle = False if self.theme == "light" else True
 
         self.root = Tk()
-        self.root.title("Ping Analysis")
+        self.root.title(f"Ping Analysis {self.version}")
         self.root.geometry("750x575")
         self.root.iconbitmap("images/favicon/favicon.ico")
 
@@ -157,7 +158,7 @@ class PingAnalysisGui:
         self.large_ping_count = 0
         self.extreme_ping_count = 0
 
-    def toggle_theme(self):
+    def set_theme(self):
         if self.theme_toggle:
             self.theme = "dark"
             self.theme_toggle = False
@@ -241,7 +242,7 @@ class PingAnalysisGui:
         self.button_analyze.configure(command=self.analyze)
         self.button_refresh.configure(command=lambda: self.populate_listbox(self.get_data()))
         self.button_open_folder.configure(command=self.open_folder)
-        self.button_toggle_theme.configure(command=self.toggle_theme)
+        self.button_toggle_theme.configure(command=self.set_theme)
         self.button_open_cmd.configure(command=self.open_cmd)
         self.root.protocol("WM_DELETE_WINDOW", self.close_and_save)
 
@@ -311,7 +312,7 @@ class PingAnalysisGui:
         self.label_max_ping.configure(text=f"MAXIMUM ping count: {max(self.ping_list)}")
         self.label_min_ping.configure(text=f"MINIMUM ping count: {min(self.ping_list)}")
         self.label_mean_ping.configure(text=f"MEAN ping count: {self.mean_ping}")
-        self.label_lag_count.configure(text=f"Lagged {self.lag_count} {'times' if self.lag_count > 1 else 'time'} "
+        self.label_lag_count.configure(text=f"Lagged {self.lag_count} {'time' if self.lag_count == 1 else 'times'} "
                                        f"out of {self.ping_count} ({self.lag_percentage}%)")
 
         if self.lag_percentage > 5.0:
@@ -328,11 +329,11 @@ class PingAnalysisGui:
 
 
 def main():
-    pag = PingAnalysisGui()
-    pag.toggle_theme()
-    pag.configure_commands()
-    pag.populate_listbox(pag.get_data())
-    pag.start_mainloop()
+    pa = PingAnalysis()
+    pa.set_theme()
+    pa.configure_commands()
+    pa.populate_listbox(pa.get_data())
+    pa.start_mainloop()
 
 
 if __name__ == "__main__":
