@@ -14,12 +14,12 @@ class PingAnalysis:
         self.DEFAULT_FG = "black"
         self.DEFAULT_DARK_BG = "black"
         self.DEFAULT_DARK_FG = "white"
+        self.DIRECTORY = "raw_data"
 
         self.settings_file = open("settings.json", "r")
         self.settings_json = json.load(self.settings_file)
         self.settings_file.close()
 
-        self.directory = self.settings_json["directory"]
         self.theme = self.settings_json["theme"]
         self.tiny_ping = self.settings_json["tiny_ping"]
         self.small_ping = self.settings_json["small_ping"]
@@ -211,7 +211,7 @@ class PingAnalysis:
             self.label_lag_analysis.configure(bg=self.DEFAULT_BG)
 
     def get_data(self):
-        data = os.listdir(self.directory)
+        data = os.listdir(self.DIRECTORY)
         return data
 
     def get_selection(self):
@@ -226,13 +226,13 @@ class PingAnalysis:
             self.label_error.configure(text="ERROR: No file selected")
 
     def open_folder(self):
-        self.folder.Popen(f"explorer {self.directory}")
+        self.folder.Popen(f"explorer {self.DIRECTORY}")
 
     def open_cmd(self):
         cwd = os.getcwd()
 
-        if cwd[-8:] != self.directory:
-            os.chdir(self.directory)
+        if cwd[-8:] != self.DIRECTORY:
+            os.chdir(self.DIRECTORY)
             os.system("start cmd")
         else:
             os.system("start cmd")
@@ -251,17 +251,18 @@ class PingAnalysis:
         self.settings_json["theme"] = self.theme
         json.dump(self.settings_json, self.settings_file, indent=4)
         self.settings_file.close()
-        print("settings saved", self.settings_json)
         self.root.destroy()
 
     def generate_list(self):
-        raw_data_file = open(self.directory + "/" + self.selection)
+        raw_data_file = open(self.DIRECTORY + "/" + self.selection)
 
         for line in raw_data_file:
             if line[0:5] == "Reply":
                 self.ping_count += 1
                 self.ping_time = int(re.split(" ", line)[4][5:][:-2])
                 self.ping_list.append(self.ping_time)
+
+        raw_data_file.close()
 
     def check_auto_analyze(self):
         if self.checkbutton_auto_analyze_status.get():
@@ -316,14 +317,13 @@ class PingAnalysis:
                                        f"out of {self.ping_count} ({self.lag_percentage}%)")
 
         if self.lag_percentage > 5.0:
-            self.label_lag_analysis.configure(text="Severe Lag")
-            self.label_lag_analysis.configure(fg="red")
+            self.label_lag_analysis.configure(text="Severe Lag", fg="red")
         elif self.lag_percentage > 3.0:
-            self.label_lag_analysis.configure(text="Moderate Lag")
-            self.label_lag_analysis.configure(fg="yellow")
+            self.label_lag_analysis.configure(text="Moderate Lag", fg="yellow")
+        elif self.lag_percentage > 1.0:
+            self.label_lag_analysis.configure(text="Low Lag", fg="green")
         else:
-            self.label_lag_analysis.configure(text="Low Lag")
-            self.label_lag_analysis.configure(fg="green")
+            self.label_lag_analysis.configure(text="Extremely Low Lag", fg="cyan")
 
         return 0
 
