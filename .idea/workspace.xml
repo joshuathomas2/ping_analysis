@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3ebaa3c1-6558-40f4-83ff-dea057eba84a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pinganalysis.pyw" beforeDir="false" afterPath="$PROJECT_DIR$/pinganalysis.pyw" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/settings.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,8 +17,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pinganalysis.pyw">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="235">
-              <caret line="319" column="84" lean-forward="true" selection-start-line="319" selection-start-column="84" selection-end-line="319" selection-end-column="84" />
+            <state relative-caret-position="-1139">
+              <caret line="41" column="68" lean-forward="true" selection-start-line="41" selection-start-column="68" selection-end-line="41" selection-end-column="68" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -101,6 +102,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -112,7 +114,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -231,6 +232,16 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/pinganalysisgui.py" />
+    <entry file="file://$PROJECT_DIR$/pinganalysis.pyw">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1139">
+          <caret line="41" column="68" lean-forward="true" selection-start-line="41" selection-start-column="68" selection-end-line="41" selection-end-column="68" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -238,16 +249,6 @@
             <caret line="20" column="75" selection-start-line="20" selection-start-column="75" selection-end-line="20" selection-end-column="75" />
           </first_editor>
           <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pinganalysis.pyw">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="319" column="84" lean-forward="true" selection-start-line="319" selection-start-column="84" selection-end-line="319" selection-end-column="84" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>

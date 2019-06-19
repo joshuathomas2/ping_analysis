@@ -258,9 +258,13 @@ class PingAnalysis:
 
         for line in raw_data_file:
             if line[0:5] == "Reply":
-                self.ping_count += 1
-                self.ping_time = int(re.split(" ", line)[4][5:][:-2])
-                self.ping_list.append(self.ping_time)
+                try:
+                    self.ping_time = int(re.split(" ", line)[4][5:][:-2])
+                    self.ping_count += 1
+                    self.ping_list.append(self.ping_time)
+                except ValueError:
+                    self.label_error.configure(text=f"ERROR: One or more lines could not be read")
+
 
         raw_data_file.close()
 
