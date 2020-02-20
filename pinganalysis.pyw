@@ -116,8 +116,6 @@ class PingAnalysis:
         self.button_toggle_theme = Button(self.frame_main, text="Dark Theme")
         self.button_toggle_theme.pack(fill=BOTH, expand=1)
 
-        self.folder = subprocess
-
         self.selection_index = None
         self.selection = None
 
@@ -226,7 +224,7 @@ class PingAnalysis:
             self.label_error.configure(text="ERROR: No file selected")
 
     def open_folder(self):
-        self.folder.Popen(f"explorer {self.DIRECTORY}")
+        subprocess.run(f"explorer {self.DIRECTORY}")
 
     def open_cmd(self):
         cwd = os.getcwd()
