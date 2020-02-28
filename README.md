@@ -2,7 +2,7 @@
 
 - Run pinganalysis.pyw.
 - Select file from listbox on the left to analyze.
-- Once selected, press the Analyze button.
+- Once selected, press the Analyze button (or press the enter key).
 
 ## Creating your own files
 - To create your own file to analyze click the Open CMD button.
@@ -10,7 +10,7 @@
 - Let it run for as long as you would like. You can keep it running and analyze it at the same time.
 - Once you are done with it, you can press CTRL + C or simply exit the CMD prompt window.
 - Click the Refresh List button.
-- Select your text file from the list and click the Analyze button.
+- Select your text file from the list and click the Analyze button (or press the enter key).
 
 ## settings.json
 - Set your own values in settings.json.

@@ -47,6 +47,7 @@ class PingAnalysis:
         self.root.title(f"Ping Analysis {self.version}")
         self.root.geometry("750x575")
         self.root.iconbitmap("images/favicon/favicon.ico")
+        self.root.bind("<Return>", self.user_keypress)
 
         self.frame_data = tk.Frame(self.root)
         self.frame_data.pack(side=tk.RIGHT, fill=tk.BOTH)
@@ -250,6 +251,9 @@ class PingAnalysis:
                     self.label_header.configure(text="ERROR: One or more lines could not be read")
 
         raw_data_file.close()
+
+    def user_keypress(self, event):
+        self.analyze()
 
     def analyze(self):
         self.clear_variables()
