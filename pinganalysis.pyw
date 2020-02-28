@@ -1,4 +1,4 @@
-from tkinter import *
+import tkinter as tk
 import subprocess
 import json
 import os
@@ -41,80 +41,73 @@ class PingAnalysis:
         self.extreme_ping_count = 0
         self.theme_toggle = False if self.theme == "light" else True
 
-        self.root = Tk()
+        self.root = tk.Tk()
         self.root.title(f"Ping Analysis {self.version}")
         self.root.geometry("750x575")
         self.root.iconbitmap("images/favicon/favicon.ico")
 
-        self.frame_main = Frame(self.root)
-        self.frame_main.pack(side=LEFT, fill=BOTH)
+        self.frame_main = tk.Frame(self.root)
+        self.frame_main.pack(side=tk.LEFT, fill=tk.BOTH)
 
-        self.frame_data = Frame(self.root)
-        self.frame_data.pack(side=RIGHT, fill=BOTH, expand=1)
+        self.frame_data = tk.Frame(self.root)
+        self.frame_data.pack(side=tk.RIGHT, fill=tk.BOTH, expand=1)
 
-        self.listbox_data = Listbox(self.frame_main, height=25)
-        self.listbox_data.pack(side=TOP)
+        self.listbox_data = tk.Listbox(self.frame_main, height=25)
+        self.listbox_data.pack(side=tk.TOP)
 
-        self.label_title = Label(self.frame_data, height=2, text="Ping Analysis", font=self.FONT_LARGE)
-        self.label_title.pack(fill=X)
+        self.label_title = tk.Label(self.frame_data, height=2, text="Ping Analysis", font=self.FONT_LARGE)
+        self.label_title.pack(fill=tk.X)
 
-        self.label_error = Label(self.frame_data, fg="red", font=self.FONT_LARGE)
+        self.label_error = tk.Label(self.frame_data, fg="red", font=self.FONT_LARGE)
         self.label_error.pack()
 
-        self.label_file = Label(self.frame_data, height=1, font=self.FONT_MEDIUM)
+        self.label_file = tk.Label(self.frame_data, height=1, font=self.FONT_MEDIUM)
         self.label_file.pack()
 
-        self.label_tiny_ping = Label(self.frame_data, font=self.FONT)
+        self.label_tiny_ping = tk.Label(self.frame_data, font=self.FONT)
         self.label_tiny_ping.pack()
 
-        self.label_small_ping = Label(self.frame_data, font=self.FONT)
+        self.label_small_ping = tk.Label(self.frame_data, font=self.FONT)
         self.label_small_ping.pack()
 
-        self.label_medium_ping = Label(self.frame_data, font=self.FONT)
+        self.label_medium_ping = tk.Label(self.frame_data, font=self.FONT)
         self.label_medium_ping.pack()
 
-        self.label_large_ping = Label(self.frame_data, font=self.FONT)
+        self.label_large_ping = tk.Label(self.frame_data, font=self.FONT)
         self.label_large_ping.pack()
 
-        self.label_extreme_ping = Label(self.frame_data, font=self.FONT)
+        self.label_extreme_ping = tk.Label(self.frame_data, font=self.FONT)
         self.label_extreme_ping.pack()
 
-        self.label_max_ping = Label(self.frame_data, font=self.FONT_MEDIUM)
+        self.label_max_ping = tk.Label(self.frame_data, font=self.FONT_MEDIUM)
         self.label_max_ping.pack()
 
-        self.label_min_ping = Label(self.frame_data, font=self.FONT_MEDIUM)
+        self.label_min_ping = tk.Label(self.frame_data, font=self.FONT_MEDIUM)
         self.label_min_ping.pack()
 
-        self.label_mean_ping = Label(self.frame_data, font=self.FONT_MEDIUM)
+        self.label_mean_ping = tk.Label(self.frame_data, font=self.FONT_MEDIUM)
         self.label_mean_ping.pack()
 
-        self.label_lag_count = Label(self.frame_data, font=self.FONT_MEDIUM)
+        self.label_lag_count = tk.Label(self.frame_data, font=self.FONT_MEDIUM)
         self.label_lag_count.pack()
 
-        self.label_lag_analysis = Label(self.frame_data, font=self.FONT_MEDIUM)
+        self.label_lag_analysis = tk.Label(self.frame_data, font=self.FONT_MEDIUM)
         self.label_lag_analysis.pack()
 
-        '''
-        self.checkbutton_auto_analyze_status = IntVar()
-        self.checkbutton_auto_analyze = Checkbutton(self.frame_main,
-                                                    text="Auto-Analyze", variable=self.checkbutton_auto_analyze_status)
-        self.checkbutton_auto_analyze.pack(fill=BOTH, expand=1)
-        '''
+        self.button_analyze = tk.Button(self.frame_main, text="Analyze")
+        self.button_analyze.pack(fill=tk.BOTH, expand=1)
 
-        self.button_analyze = Button(self.frame_main, text="Analyze")
-        self.button_analyze.pack(fill=BOTH, expand=1)
+        self.button_refresh = tk.Button(self.frame_main, text="Refresh List")
+        self.button_refresh.pack(fill=tk.BOTH, expand=1)
 
-        self.button_refresh = Button(self.frame_main, text="Refresh List")
-        self.button_refresh.pack(fill=BOTH, expand=1)
+        self.button_open_cmd = tk.Button(self.frame_main, text="Open CMD")
+        self.button_open_cmd.pack(fill=tk.BOTH, expand=1)
 
-        self.button_open_cmd = Button(self.frame_main, text="Open CMD")
-        self.button_open_cmd.pack(fill=BOTH, expand=1)
+        self.button_open_folder = tk.Button(self.frame_main, text="Open Folder")
+        self.button_open_folder.pack(fill=tk.BOTH, expand=1)
 
-        self.button_open_folder = Button(self.frame_main, text="Open Folder")
-        self.button_open_folder.pack(fill=BOTH, expand=1)
-
-        self.button_toggle_theme = Button(self.frame_main, text="Dark Theme")
-        self.button_toggle_theme.pack(fill=BOTH, expand=1)
+        self.button_toggle_theme = tk.Button(self.frame_main, text="Dark Theme")
+        self.button_toggle_theme.pack(fill=tk.BOTH, expand=1)
 
         self.selection_index = None
         self.selection = None
@@ -128,7 +121,7 @@ class PingAnalysis:
             self.listbox_data.insert("end", item)
 
     def clear_listbox(self):
-        self.listbox_data.delete(0, END)
+        self.listbox_data.delete(0, tk.END)
 
     def clear_labels(self):
         self.label_tiny_ping.configure(text="")
@@ -213,7 +206,6 @@ class PingAnalysis:
         return data
 
     def get_selection(self):
-
         self.selection_index = self.listbox_data.curselection()
 
         if self.selection_index != ():
@@ -263,12 +255,7 @@ class PingAnalysis:
                 except ValueError:
                     self.label_error.configure(text=f"ERROR: One or more lines could not be read")
 
-
         raw_data_file.close()
-
-    def check_auto_analyze(self):
-        if self.checkbutton_auto_analyze_status.get():
-            self.checkbutton_auto_analyze.after(250, self.analyze())
 
     def analyze(self):
         self.clear_variables()
