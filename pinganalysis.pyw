@@ -11,22 +11,25 @@ class PingAnalysis:
         self.settings_json = json.load(self.settings_file)
         self.settings_file.close()
 
-        self.FONT = ("Times New Roman", "12")
-        self.FONT_MEDIUM = ("Times New Roman", "16", "bold")
+        self.FONT = ("Times New Roman", "16", "bold")
+        self.FONT_MEDIUM = ("Times New Roman", "20", "bold")
         self.FONT_LARGE = ("Times New Roman", "24", "bold")
         self.DEFAULT_BG = self.settings_json["DEFAULT_BG"]
         self.DEFAULT_FG = self.settings_json["DEFAULT_FG"]
         self.DEFAULT_DARK_BG = self.settings_json["DEFAULT_DARK_BG"]
         self.DEFAULT_DARK_FG = self.settings_json["DEFAULT_DARK_FG"]
-        self.DIRECTORY = "raw_data"
+        self.DIRECTORY = self.settings_json["DIRECTORY"]
 
         self.theme = self.settings_json["theme"]
+        self.theme_toggle = False if self.theme == "light" else True
         self.tiny_ping = self.settings_json["tiny_ping"]
         self.small_ping = self.settings_json["small_ping"]
         self.medium_ping = self.settings_json["medium_ping"]
         self.large_ping = self.settings_json["large_ping"]
         self.extreme_ping = self.settings_json["extreme_ping"]
         self.version = self.settings_json["version"]
+        self.selection_index = None
+        self.selection = None
 
         self.ping_list = []
         self.ping_count = 0
@@ -39,86 +42,79 @@ class PingAnalysis:
         self.medium_ping_count = 0
         self.large_ping_count = 0
         self.extreme_ping_count = 0
-        self.theme_toggle = False if self.theme == "light" else True
 
         self.root = tk.Tk()
         self.root.title(f"Ping Analysis {self.version}")
         self.root.geometry("750x575")
         self.root.iconbitmap("images/favicon/favicon.ico")
 
-        self.frame_main = tk.Frame(self.root)
-        self.frame_main.pack(side=tk.LEFT, fill=tk.BOTH)
-
         self.frame_data = tk.Frame(self.root)
-        self.frame_data.pack(side=tk.RIGHT, fill=tk.BOTH, expand=1)
+        self.frame_data.pack(side=tk.RIGHT, fill=tk.BOTH)
 
-        self.listbox_data = tk.Listbox(self.frame_main, height=25)
+        self.frame_main = tk.Frame(self.root)
+        self.frame_main.pack(fill=tk.BOTH, expand=1)
+
+        self.listbox_data = tk.Listbox(self.frame_data, height=25)
         self.listbox_data.pack(side=tk.TOP)
 
-        self.label_title = tk.Label(self.frame_data, height=2, text="Ping Analysis", font=self.FONT_LARGE)
-        self.label_title.pack(fill=tk.X)
+        self.label_info = tk.Label(self.frame_main, font=self.FONT_LARGE, text="Ping Analysis")
+        self.label_info.pack(pady=(10, 25))
 
-        self.label_error = tk.Label(self.frame_data, fg="red", font=self.FONT_LARGE)
-        self.label_error.pack()
+        self.label_file = tk.Label(self.frame_main, font=self.FONT_LARGE, anchor="w")
+        self.label_file.pack(fill=tk.X, pady=(0, 25))
 
-        self.label_file = tk.Label(self.frame_data, height=1, font=self.FONT_MEDIUM)
-        self.label_file.pack()
+        self.label_lag_analysis = tk.Label(self.frame_main, font=self.FONT_MEDIUM, anchor="w")
+        self.label_lag_analysis.pack(fill=tk.X)
 
-        self.label_tiny_ping = tk.Label(self.frame_data, font=self.FONT)
-        self.label_tiny_ping.pack()
+        self.label_max_ping = tk.Label(self.frame_main, font=self.FONT_MEDIUM, anchor="w")
+        self.label_max_ping.pack(fill=tk.X)
 
-        self.label_small_ping = tk.Label(self.frame_data, font=self.FONT)
-        self.label_small_ping.pack()
+        self.label_min_ping = tk.Label(self.frame_main, font=self.FONT_MEDIUM, anchor="w")
+        self.label_min_ping.pack(fill=tk.X)
 
-        self.label_medium_ping = tk.Label(self.frame_data, font=self.FONT)
-        self.label_medium_ping.pack()
+        self.label_mean_ping = tk.Label(self.frame_main, font=self.FONT_MEDIUM, anchor="w")
+        self.label_mean_ping.pack(fill=tk.X)
 
-        self.label_large_ping = tk.Label(self.frame_data, font=self.FONT)
-        self.label_large_ping.pack()
+        self.label_lag_count = tk.Label(self.frame_main, font=self.FONT_MEDIUM, anchor="w")
+        self.label_lag_count.pack(fill=tk.X, pady=(0, 25))
 
-        self.label_extreme_ping = tk.Label(self.frame_data, font=self.FONT)
-        self.label_extreme_ping.pack()
+        self.label_tiny_ping = tk.Label(self.frame_main, font=self.FONT, anchor="w")
+        self.label_tiny_ping.pack(fill=tk.X)
 
-        self.label_max_ping = tk.Label(self.frame_data, font=self.FONT_MEDIUM)
-        self.label_max_ping.pack()
+        self.label_small_ping = tk.Label(self.frame_main, font=self.FONT, anchor="w")
+        self.label_small_ping.pack(fill=tk.X)
 
-        self.label_min_ping = tk.Label(self.frame_data, font=self.FONT_MEDIUM)
-        self.label_min_ping.pack()
+        self.label_medium_ping = tk.Label(self.frame_main, font=self.FONT, anchor="w")
+        self.label_medium_ping.pack(fill=tk.X)
 
-        self.label_mean_ping = tk.Label(self.frame_data, font=self.FONT_MEDIUM)
-        self.label_mean_ping.pack()
+        self.label_large_ping = tk.Label(self.frame_main, font=self.FONT, anchor="w")
+        self.label_large_ping.pack(fill=tk.X)
 
-        self.label_lag_count = tk.Label(self.frame_data, font=self.FONT_MEDIUM)
-        self.label_lag_count.pack()
+        self.label_extreme_ping = tk.Label(self.frame_main, font=self.FONT, anchor="w")
+        self.label_extreme_ping.pack(fill=tk.X)
 
-        self.label_lag_analysis = tk.Label(self.frame_data, font=self.FONT_MEDIUM)
-        self.label_lag_analysis.pack()
-
-        self.button_analyze = tk.Button(self.frame_main, text="Analyze")
+        self.button_analyze = tk.Button(self.frame_data, text="Analyze")
         self.button_analyze.pack(fill=tk.BOTH, expand=1)
 
-        self.button_refresh = tk.Button(self.frame_main, text="Refresh List")
+        self.button_refresh = tk.Button(self.frame_data, text="Refresh List")
         self.button_refresh.pack(fill=tk.BOTH, expand=1)
 
-        self.button_open_cmd = tk.Button(self.frame_main, text="Open CMD")
+        self.button_open_cmd = tk.Button(self.frame_data, text="Open CMD")
         self.button_open_cmd.pack(fill=tk.BOTH, expand=1)
 
-        self.button_open_folder = tk.Button(self.frame_main, text="Open Folder")
+        self.button_open_folder = tk.Button(self.frame_data, text="Open Folder")
         self.button_open_folder.pack(fill=tk.BOTH, expand=1)
 
-        self.button_toggle_theme = tk.Button(self.frame_main, text="Dark Theme")
+        self.button_toggle_theme = tk.Button(self.frame_data, text="Dark Theme")
         self.button_toggle_theme.pack(fill=tk.BOTH, expand=1)
-
-        self.selection_index = None
-        self.selection = None
 
     def start_mainloop(self):
         self.root.mainloop()
 
-    def populate_listbox(self, data):
+    def populate_listbox(self, files):
         self.clear_listbox()
-        for item in data:
-            self.listbox_data.insert("end", item)
+        for file in files:
+            self.listbox_data.insert("end", file)
 
     def clear_listbox(self):
         self.listbox_data.delete(0, tk.END)
@@ -154,16 +150,15 @@ class PingAnalysis:
             self.theme = "dark"
             self.theme_toggle = False
             self.button_toggle_theme.configure(text="Light Theme")
-            self.frame_main.configure(bg=self.DEFAULT_DARK_BG)
             self.frame_data.configure(bg=self.DEFAULT_DARK_BG)
+            self.frame_main.configure(bg=self.DEFAULT_DARK_BG)
             self.listbox_data.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.button_toggle_theme.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.button_analyze.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.button_open_cmd.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.button_open_folder.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.button_refresh.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_title.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_error.configure(bg=self.DEFAULT_DARK_BG)
+            self.label_info.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.label_tiny_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.label_small_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
             self.label_medium_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
@@ -179,16 +174,15 @@ class PingAnalysis:
             self.theme = "light"
             self.theme_toggle = True
             self.button_toggle_theme.configure(text="Dark Theme")
-            self.frame_main.configure(bg=self.DEFAULT_BG)
             self.frame_data.configure(bg=self.DEFAULT_BG)
+            self.frame_main.configure(bg=self.DEFAULT_BG)
             self.listbox_data.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.button_toggle_theme.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.button_analyze.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.button_open_cmd.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.button_open_folder.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.button_refresh.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_title.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_error.configure(bg=self.DEFAULT_BG)
+            self.label_info.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.label_tiny_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.label_small_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
             self.label_medium_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
@@ -202,8 +196,8 @@ class PingAnalysis:
             self.label_lag_analysis.configure(bg=self.DEFAULT_BG)
 
     def get_data(self):
-        data = os.listdir(self.DIRECTORY)
-        return data
+        files = os.listdir(self.DIRECTORY)
+        return files
 
     def get_selection(self):
         self.selection_index = self.listbox_data.curselection()
@@ -213,7 +207,7 @@ class PingAnalysis:
         else:
             self.selection = None
             self.clear_labels()
-            self.label_error.configure(text="ERROR: No file selected")
+            self.label_info.configure(text="ERROR: No file selected")
 
     def open_folder(self):
         subprocess.run(f"explorer {self.DIRECTORY}")
@@ -253,14 +247,14 @@ class PingAnalysis:
                     self.ping_count += 1
                     self.ping_list.append(self.ping_time)
                 except ValueError:
-                    self.label_error.configure(text=f"ERROR: One or more lines could not be read")
+                    self.label_info.configure(text="ERROR: One or more lines could not be read")
 
         raw_data_file.close()
 
     def analyze(self):
         self.clear_variables()
         self.clear_labels()
-        self.label_error.configure(text="")
+        self.label_info.configure(text="Ping Analysis")
 
         self.get_selection()
 
@@ -268,14 +262,14 @@ class PingAnalysis:
             self.generate_list()
         else:
             self.clear_labels()
-            self.label_error.configure(text="ERROR: No file selected")
+            self.label_info.configure(text="ERROR: No file selected")
             return -1
 
         if len(self.ping_list) != 0:
             self.mean_ping = int((sum(self.ping_list) / len(self.ping_list)))
         else:
             self.clear_labels()
-            self.label_error.configure(text="ERROR: No data or file is not UTF-8")
+            self.label_info.configure(text="ERROR: No data or file is not UTF-8")
             return -1
 
         for ping in self.ping_list:
