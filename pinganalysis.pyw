@@ -7,18 +7,18 @@ import re
 
 class PingAnalysis:
     def __init__(self):
-        self.FONT = ("Times New Roman", "12")
-        self.FONT_MEDIUM = ("Times New Roman", "16", "bold")
-        self.FONT_LARGE = ("Times New Roman", "24", "bold")
-        self.DEFAULT_BG = "SystemButtonFace"
-        self.DEFAULT_FG = "black"
-        self.DEFAULT_DARK_BG = "black"
-        self.DEFAULT_DARK_FG = "white"
-        self.DIRECTORY = "raw_data"
-
         self.settings_file = open("settings.json", "r")
         self.settings_json = json.load(self.settings_file)
         self.settings_file.close()
+
+        self.FONT = ("Times New Roman", "12")
+        self.FONT_MEDIUM = ("Times New Roman", "16", "bold")
+        self.FONT_LARGE = ("Times New Roman", "24", "bold")
+        self.DEFAULT_BG = self.settings_json["DEFAULT_BG"]
+        self.DEFAULT_FG = self.settings_json["DEFAULT_FG"]
+        self.DEFAULT_DARK_BG = self.settings_json["DEFAULT_DARK_BG"]
+        self.DEFAULT_DARK_FG = self.settings_json["DEFAULT_DARK_FG"]
+        self.DIRECTORY = "raw_data"
 
         self.theme = self.settings_json["theme"]
         self.tiny_ping = self.settings_json["tiny_ping"]
