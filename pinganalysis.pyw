@@ -59,7 +59,7 @@ class PingAnalysis:
         self.listbox_data.pack(side=tk.TOP)
 
         self.label_header = tk.Label(self.frame_main, font=self.FONT_LARGE, text="Ping Analysis")
-        self.label_header.pack(pady=(10, 25))
+        self.label_header.pack(pady=(50, 50))
 
         self.label_file = tk.Label(self.frame_main, font=self.FONT_LARGE, anchor="w")
         self.label_file.pack(fill=tk.X, pady=(0, 25), padx=(10, 0))
