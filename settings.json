@@ -10,5 +10,5 @@
     "medium_ping": 75,
     "large_ping": 100,
     "extreme_ping": 200,
-    "version": "2.3.3"
+    "version": "2.3.4"
 }

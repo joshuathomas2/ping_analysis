@@ -21,7 +21,6 @@ class PingAnalysis:
         self.DIRECTORY = self.settings_json["DIRECTORY"]
 
         self.theme = self.settings_json["theme"]
-        self.theme_toggle = False if self.theme == "light" else True
         self.tiny_ping = self.settings_json["tiny_ping"]
         self.small_ping = self.settings_json["small_ping"]
         self.medium_ping = self.settings_json["medium_ping"]
@@ -109,6 +108,9 @@ class PingAnalysis:
         self.button_toggle_theme = tk.Button(self.frame_data, text="Dark Theme")
         self.button_toggle_theme.pack(fill=tk.BOTH, expand=1)
 
+        self.widget_list = [widget for frame in self.root.children.values() for widget in frame.children.values()]
+        self.widget_list.extend(frame for frame in self.root.children.values())
+
     def start_mainloop(self):
         self.root.mainloop()
 
@@ -146,55 +148,25 @@ class PingAnalysis:
         self.large_ping_count = 0
         self.extreme_ping_count = 0
 
-    def set_theme(self):
-        if self.theme_toggle:
-            self.theme = "dark"
-            self.theme_toggle = False
+    def set_theme(self, new_theme):
+        if new_theme == "light":
             self.button_toggle_theme.configure(text="Light Theme")
-            self.frame_data.configure(bg=self.DEFAULT_DARK_BG)
-            self.frame_main.configure(bg=self.DEFAULT_DARK_BG)
-            self.listbox_data.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.button_toggle_theme.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.button_analyze.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.button_open_cmd.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.button_open_folder.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.button_refresh.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_header.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_tiny_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_small_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_medium_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_large_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_extreme_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_max_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_min_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_mean_ping.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_file.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_lag_count.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
-            self.label_lag_analysis.configure(bg=self.DEFAULT_DARK_BG)
-        else:
-            self.theme = "light"
-            self.theme_toggle = True
+
+            for widget in self.widget_list:
+                if widget.__class__.__name__ == "Frame":
+                    widget.configure(bg=self.DEFAULT_DARK_BG)
+                else:
+                    widget.configure(fg=self.DEFAULT_DARK_FG, bg=self.DEFAULT_DARK_BG)
+        elif new_theme == "dark":
             self.button_toggle_theme.configure(text="Dark Theme")
-            self.frame_data.configure(bg=self.DEFAULT_BG)
-            self.frame_main.configure(bg=self.DEFAULT_BG)
-            self.listbox_data.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.button_toggle_theme.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.button_analyze.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.button_open_cmd.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.button_open_folder.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.button_refresh.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_header.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_tiny_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_small_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_medium_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_large_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_extreme_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_max_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_min_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_mean_ping.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_file.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_lag_count.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
-            self.label_lag_analysis.configure(bg=self.DEFAULT_BG)
+
+            for widget in self.widget_list:
+                if widget.__class__.__name__ == "Frame":
+                    widget.configure(bg=self.DEFAULT_BG)
+                else:
+                    widget.configure(fg=self.DEFAULT_FG, bg=self.DEFAULT_BG)
+
+        self.theme = new_theme
 
     def get_data(self):
         files = os.listdir(self.DIRECTORY)
@@ -227,7 +199,7 @@ class PingAnalysis:
         self.button_analyze.configure(command=self.analyze)
         self.button_refresh.configure(command=lambda: self.populate_listbox(self.get_data()))
         self.button_open_folder.configure(command=self.open_folder)
-        self.button_toggle_theme.configure(command=self.set_theme)
+        self.button_toggle_theme.configure(command=lambda: self.set_theme("light" if self.theme == "dark" else "dark"))
         self.button_open_cmd.configure(command=self.open_cmd)
         self.root.protocol("WM_DELETE_WINDOW", self.close_and_save)
 
@@ -267,14 +239,12 @@ class PingAnalysis:
         else:
             self.clear_labels()
             self.label_header.configure(text="ERROR: No file selected")
-            return -1
 
         if len(self.ping_list) != 0:
             self.mean_ping = int((sum(self.ping_list) / len(self.ping_list)))
         else:
             self.clear_labels()
             self.label_header.configure(text="ERROR: No data or file is not UTF-8")
-            return -1
 
         for ping in self.ping_list:
             if ping > self.extreme_ping:
@@ -306,7 +276,7 @@ class PingAnalysis:
         if self.lag_percentage > 10.0:
             self.label_lag_analysis.configure(text="Extremely Severe Lag", fg="red")
         elif self.lag_percentage > 5.0:
-            self.label_lag_analysis.configure(text="Severe Lag", fg="red")
+            self.label_lag_analysis.configure(text="Severe Lag", fg="orange")
         elif self.lag_percentage > 3.0:
             self.label_lag_analysis.configure(text="Moderate Lag", fg="yellow")
         elif self.lag_percentage > 1.0:
@@ -314,12 +284,10 @@ class PingAnalysis:
         else:
             self.label_lag_analysis.configure(text="Extremely Low Lag", fg="cyan")
 
-        return 0
-
 
 def main():
     pa = PingAnalysis()
-    pa.set_theme()
+    pa.set_theme(pa.theme)
     pa.configure_commands()
     pa.populate_listbox(pa.get_data())
     pa.start_mainloop()
