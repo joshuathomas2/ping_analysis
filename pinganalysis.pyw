@@ -11,9 +11,9 @@ class PingAnalysis:
         self.settings_json = json.load(self.settings_file)
         self.settings_file.close()
 
-        self.FONT = ("Times New Roman", "16", "bold")
-        self.FONT_MEDIUM = ("Times New Roman", "20", "bold")
-        self.FONT_LARGE = ("Times New Roman", "24", "bold")
+        self.FONT_SMALL = (f"{self.settings_json['FONT']}", "16", "bold")
+        self.FONT_MEDIUM = (f"{self.settings_json['FONT']}", "20", "bold")
+        self.FONT_LARGE = (f"{self.settings_json['FONT']}", "24", "bold")
         self.DEFAULT_BG = self.settings_json["DEFAULT_BG"]
         self.DEFAULT_FG = self.settings_json["DEFAULT_FG"]
         self.DEFAULT_DARK_BG = self.settings_json["DEFAULT_DARK_BG"]
@@ -44,7 +44,7 @@ class PingAnalysis:
 
         self.root = tk.Tk()
         self.root.title(f"Ping Analysis {self.version}")
-        self.root.geometry("750x575")
+        self.root.geometry("750x600")
         self.root.iconbitmap("images/favicon/favicon.ico")
         self.root.bind("<Return>", self.user_keypress)
 
@@ -78,19 +78,19 @@ class PingAnalysis:
         self.label_lag_count = tk.Label(self.frame_main, font=self.FONT_MEDIUM, anchor="w")
         self.label_lag_count.pack(fill=tk.X, pady=(0, 25), padx=(10, 0))
 
-        self.label_tiny_ping = tk.Label(self.frame_main, font=self.FONT, anchor="w")
+        self.label_tiny_ping = tk.Label(self.frame_main, font=self.FONT_SMALL, anchor="w")
         self.label_tiny_ping.pack(fill=tk.X, padx=(10, 0))
 
-        self.label_small_ping = tk.Label(self.frame_main, font=self.FONT, anchor="w")
+        self.label_small_ping = tk.Label(self.frame_main, font=self.FONT_SMALL, anchor="w")
         self.label_small_ping.pack(fill=tk.X, padx=(10, 0))
 
-        self.label_medium_ping = tk.Label(self.frame_main, font=self.FONT, anchor="w")
+        self.label_medium_ping = tk.Label(self.frame_main, font=self.FONT_SMALL, anchor="w")
         self.label_medium_ping.pack(fill=tk.X, padx=(10, 0))
 
-        self.label_large_ping = tk.Label(self.frame_main, font=self.FONT, anchor="w")
+        self.label_large_ping = tk.Label(self.frame_main, font=self.FONT_SMALL, anchor="w")
         self.label_large_ping.pack(fill=tk.X, padx=(10, 0))
 
-        self.label_extreme_ping = tk.Label(self.frame_main, font=self.FONT, anchor="w")
+        self.label_extreme_ping = tk.Label(self.frame_main, font=self.FONT_SMALL, anchor="w")
         self.label_extreme_ping.pack(fill=tk.X, padx=(10, 0))
 
         self.button_analyze = tk.Button(self.frame_data, text="Analyze")
@@ -239,12 +239,14 @@ class PingAnalysis:
         else:
             self.clear_labels()
             self.label_header.configure(text="ERROR: No file selected")
+            raise Exception("ERROR: No file selected")
 
         if len(self.ping_list) != 0:
             self.mean_ping = int((sum(self.ping_list) / len(self.ping_list)))
         else:
             self.clear_labels()
             self.label_header.configure(text="ERROR: No data or file is not UTF-8")
+            raise Exception("ERROR: No data or file is not UTF-8")
 
         for ping in self.ping_list:
             if ping > self.extreme_ping:

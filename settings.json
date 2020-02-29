@@ -1,6 +1,7 @@
 {
     "theme": "dark",
-    "DEFAULT_BG": "SystemButtonFace",
+    "FONT": "Tahoma",
+    "DEFAULT_BG": "#7f7f7f",
     "DEFAULT_FG": "#000000",
     "DEFAULT_DARK_BG": "#23272a",
     "DEFAULT_DARK_FG": "#FFFFFF",
@@ -10,5 +11,5 @@
     "medium_ping": 75,
     "large_ping": 100,
     "extreme_ping": 200,
-    "version": "2.3.4"
+    "version": "2.3.5"
 }
